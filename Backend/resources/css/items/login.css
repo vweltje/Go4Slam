@@ -1,0 +1,7 @@
+#login-page .panel {
+  width: 500px;
+  margin-left: 50%;
+  margin-top: 50px;
+  transform: translateX(-50%);
+}
+/*# sourceMappingURL=login.css.map */
