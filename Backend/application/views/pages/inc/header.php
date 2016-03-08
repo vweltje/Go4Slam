@@ -14,6 +14,11 @@
     <nav>
         <div class="container">
             <a href="<?=base_url('analytics')?>"><i class="fa fa-pie-chart"></i> Analytics</a>
+            <a href="<?=base_url('content')?>"><i class="fa fa-newspaper-o"></i> Content Items</a> <!--<i class="fa fa-inbox"></i><i class="fa fa-newspaper-o"></i>-->
+            <a href="<?=base_url('sponsors')?>"><i class="fa fa-money"></i> Sponsors</a> <!--<i class="fa fa-credit-card-alt"></i>-->
+            <a href="<?=base_url('about')?>"><i class="fa fa-info"></i> About Go4Slam</a>
+            <a href="<?=base_url('user/app_users_overview')?>"><i class="fa fa-mobile"></i> App Users</a>
+            <a href="<?=base_url('user/cms_users_overview')?>"><i class="fa fa-user"></i> CMS Users</a>
         </div>
     </nav>
 </header>

@@ -1,17 +1,27 @@
 body {
-    .panel-primary {
-        border-color: @orange;
-
-        .panel-heading {
-            background-color: @orange;
+    .panel {
+        &.panel-primary {
             border-color: @orange;
+
+            .panel-heading {
+                background-color: @orange;
+                border-color: @orange;
+            }
+        }
+        
+        &.panel-default {
+            .panel-heading {
+                .fa-plus {
+                    float: right;
+                }
+            }
         }
     }
     
     .btn-primary {
         background-color: @orange;
         border: none;
-        
+
         &:hover {
             background-color: @dark-orange;
             color: white;

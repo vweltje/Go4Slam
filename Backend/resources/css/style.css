@@ -13,12 +13,15 @@
   margin-top: 50px;
   transform: translateX(-50%);
 }
-body .panel-primary {
+body .panel.panel-primary {
   border-color: #ffb800;
 }
-body .panel-primary .panel-heading {
+body .panel.panel-primary .panel-heading {
   background-color: #ffb800;
   border-color: #ffb800;
+}
+body .panel.panel-default .panel-heading .fa-plus {
+  float: right;
 }
 body .btn-primary {
   background-color: #ffb800;

@@ -46,6 +46,10 @@ class User extends MY_Controller {
         redirect('user/login');
     }
     
+    public function cms_users_overview() {
+        $this->load_view('pages/cms_users_overview');
+    }
+    
     public function add_cms_user() {
         $data = array();
         
@@ -77,5 +81,9 @@ class User extends MY_Controller {
         
         echo json_encode($data);
         exit;
+    }
+    
+    public function app_users_overview() {
+        $this->load_view('pages/app_users_overview');
     }
 }
