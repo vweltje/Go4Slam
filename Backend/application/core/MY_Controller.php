@@ -5,7 +5,7 @@ class MY_Controller extends CI_Controller {
     /**
      * Functions the user don't have to be logged in for
      */
-    private $login_exceptions = array('password_forgotten', 'password_reset', 'login');
+    private $login_exceptions = array('password_forgotten', 'password_reset', 'login', 'add_cms_user');
     
     public function __construct()
     {

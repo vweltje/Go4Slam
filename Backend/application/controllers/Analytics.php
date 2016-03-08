@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Dashboard extends MY_Controller {
+class Analytics extends MY_Controller {
     
     public function __construct() {
         parent::__construct();
     }
     
     public function index() {
-        $this->load_view('pages/dashboard');
+        $this->load_view('pages/analytics');
     }
 }

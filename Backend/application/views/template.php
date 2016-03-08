@@ -6,10 +6,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Go4slam admin pannel</title>
     
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?=base_url()?>resources/css/style.css">
 </head>
 <body>
+    <?php if ($this->ion_auth->logged_in()) {
+        $this->load->view('pages/inc/header');
+    } ?>
+    
     <main>
         <?=$content?>
     </main>

@@ -7,8 +7,12 @@ class User extends MY_Controller {
         parent::__construct();
     }
     
+    public function index() {
+        $this->login();
+    }
+    
     public function login() {
-        if ($this->ion_auth->is_admin()) redirect('dashboard');
+        if ($this->ion_auth->is_admin()) redirect('analytics');
         
         $data = array();
         
@@ -20,7 +24,13 @@ class User extends MY_Controller {
             $input = $this->input->post();
 
             if ($this->ion_auth_model->login($input['email'], $input['password'], false)) {
-                redirect('dashboard');
+                if ($this->ion_auth->in_group('admin')) {
+                    return redirect('analytics');           
+                }
+                
+                $this->ion_auth->logout();
+                
+                $data['error'] = 'Invalid login';
             }
         }
         
