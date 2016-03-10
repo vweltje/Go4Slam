@@ -52,3 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'user';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+$route['add_cms_user'] = 'user/add_or_edit_cms_user';
+$route['edit_cms_user/(:num)'] = 'user/add_or_edit_cms_user/$1';
+$route['delete_cms_user/(:num)'] = 'user/delete_cms_user/$1';

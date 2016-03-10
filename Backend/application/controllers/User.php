@@ -23,7 +23,7 @@ class User extends MY_Controller {
         if ($this->form_validation->run()) {
             $input = $this->input->post();
 
-            if ($this->ion_auth_model->login($input['email'], $input['password'], false)) {
+            if ($this->ion_auth_model->login($input['email'], $input['password'])) {
                 if ($this->ion_auth->in_group('admin')) {
                     return redirect('analytics');           
                 }
@@ -50,37 +50,55 @@ class User extends MY_Controller {
         $this->load_view('pages/cms_users_overview');
     }
     
-    public function add_cms_user() {
+    public function add_or_edit_cms_user($user_id = false) {
         $data = array();
         
         $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email')
-                ->set_rules('password', 'password', 'trim|required')
+                ->set_rules('password', 'password', 'trim|required|matches[passconf]')
+                ->set_rules('passconf', 'password confirmation', 'trim|required')
                 ->set_rules('first_name', 'first name', 'trim|required')
                 ->set_rules('prefix', 'prefix name', 'trim')
                 ->set_rules('last_name', 'last name', 'trim|required');
         
         if ($this->form_validation->run()) {
             $data = $this->input->post();
-            $email = $this->input->post('email');
             
-            unset($data['email']);
-            unset($data['password']);
+            unset($data['passconf']);
             
-            $user_id = $this->ion_auth_model->register($email, $this->input->post('password'), $email, $data, array('1'));
+            if (!$user_id) {
+                
+                $email = $this->input->post('email');
 
-            if ($user_id) {
-                echo json_encode('success');
-                exit;
+                unset($data['email']);
+                unset($data['password']);
+
+                if (!$user_id) {
+                    $success = $this->ion_auth_model->register($email, $this->input->post('password'), $email, $data, array('1'));
+                }
+            }
+            else {
+                $success = $this->ion_auth_model->update($user_id, $data);
             }
             
-            echo json_encode('error');
-            exit;
+            if ($success) redirect('user/cms_users_overview');
+            
+            $data['error'] = 'Invalid input, please try it again.';
         }
         
         if (validation_errors()) $data['error'] = validation_errors();
         
+        $this->load_view('pages/alter_cms_user');
+    }
+    
+    public function delete_cms_user($user_id = false) {
+        $data['success'] = false;
+        
+        if ($user_id) {
+            if ($this->ion_auth->delete_user($user_id)) $data['success'] = true;
+        }
+        
         echo json_encode($data);
-        exit;
+        return;
     }
     
     public function app_users_overview() {

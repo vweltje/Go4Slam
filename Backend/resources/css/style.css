@@ -22,6 +22,7 @@ body .panel.panel-primary .panel-heading {
 }
 body .panel.panel-default .panel-heading .fa-plus {
   float: right;
+  cursor: pointer;
 }
 body .btn-primary {
   background-color: #ffb800;
