@@ -53,6 +53,8 @@ $route['default_controller'] = 'user';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['add_cms_user'] = 'user/add_or_edit_cms_user';
-$route['edit_cms_user/(:num)'] = 'user/add_or_edit_cms_user/$1';
-$route['delete_cms_user/(:num)'] = 'user/delete_cms_user/$1';
+$route['add_cms_user/(:any)'] = 'user/add_or_edit_user/0/$1';
+$route['edit_cms_user/(:num)'] = 'user/add_or_edit_user/$1';
+$route['add_app_user'] = 'user/add_or_edit_user';
+$route['edit_app_user/(:num)'] = 'user/add_or_edit_user/$1';
+$route['delete_user/(:num)'] = 'user/delete_user/$1';

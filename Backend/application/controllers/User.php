@@ -50,7 +50,7 @@ class User extends MY_Controller {
         $this->load_view('pages/cms_users_overview');
     }
     
-    public function add_or_edit_cms_user($user_id = false) {
+    public function add_or_edit_user($user_id = false, $type = false) {
         $data = array();
         
         $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email')
@@ -65,7 +65,7 @@ class User extends MY_Controller {
             
             unset($data['passconf']);
             
-            if (!$user_id) {
+            if (!$user_id || $user_id !== 0) {
                 
                 $email = $this->input->post('email');
 
@@ -73,7 +73,11 @@ class User extends MY_Controller {
                 unset($data['password']);
 
                 if (!$user_id) {
-                    $success = $this->ion_auth_model->register($email, $this->input->post('password'), $email, $data, array('1'));
+                    $groups = array('2');
+                    
+                    if ($type === 'admin') array_push ($groups, '1');
+                    
+                    $success = $this->ion_auth_model->register($email, $this->input->post('password'), $email, $data, $groups);
                 }
             }
             else {
@@ -90,7 +94,7 @@ class User extends MY_Controller {
         $this->load_view('pages/alter_cms_user');
     }
     
-    public function delete_cms_user($user_id = false) {
+    public function delete_user($user_id = false) {
         $data['success'] = false;
         
         if ($user_id) {
