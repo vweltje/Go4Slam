@@ -43,5 +43,33 @@ body {
     
     main {
         margin-top: 30px;
+        
+        .datatable tbody tr td {
+            &:last-of-type {
+                i {
+                    padding: 0px 5px;
+                }
+            }
+            
+            &.manage > i{
+                cursor: pointer;
+            }
+        }
+        
+        small {
+            font-size: 10px;
+            
+            &:before {
+                content: '(';
+            }
+            
+            &:after {
+                content: ')';
+            }
+        }
+        
+        .alert > p {
+            display: inline;
+        }
     }
 }

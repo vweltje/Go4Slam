@@ -44,6 +44,24 @@ body .container {
 body main {
   margin-top: 30px;
 }
+body main .datatable tbody tr td:last-of-type i {
+  padding: 0px 5px;
+}
+body main .datatable tbody tr td.manage > i {
+  cursor: pointer;
+}
+body main small {
+  font-size: 10px;
+}
+body main small:before {
+  content: '(';
+}
+body main small:after {
+  content: ')';
+}
+body main .alert > p {
+  display: inline;
+}
 header {
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }
