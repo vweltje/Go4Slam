@@ -23,16 +23,16 @@ body {
         background-color: @orange;
         border: none;
 
-        &:hover {
-            background-color: @dark-orange;
-            color: white;
+        &:hover, &:active, &:focus {
+            background-color: @dark-orange!important;
+            color: white!important;
         }
     }
     
     a {
         color: @orange;
         
-        &:hover {
+        &:hover, &:active {
             color: @dark-orange;
         }
     }

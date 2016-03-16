@@ -6,7 +6,7 @@ class User extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
-        
+
         $this->load->model('users_model');
     }
 
@@ -77,12 +77,12 @@ class User extends MY_Controller {
         $data = array();
 
         $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email')
-                ->set_rules('password', 'password', 'trim'.($user_id ? '' : '|required').'|matches[passconf]|min_length[8]')
-                ->set_rules('passconf', 'password confirmation', 'trim'.($user_id ? '' : '|required').'')
+                ->set_rules('password', 'password', 'trim' . ($user_id ? '' : '|required') . '|matches[passconf]|min_length[8]')
+                ->set_rules('passconf', 'password confirmation', 'trim' . ($user_id ? '' : '|required') . '')
                 ->set_rules('first_name', 'first name', 'trim|required')
                 ->set_rules('prefix', 'prefix name', 'trim')
                 ->set_rules('last_name', 'last name', 'trim|required');
-        
+
         if ($user_id) {
             $fields = array('first_name', 'prefix', 'last_name', 'email');
             $data['user'] = $this->users_model->fields($fields)->get($user_id);
@@ -114,8 +114,9 @@ class User extends MY_Controller {
                 }
             }
             else {
-                if (!$data['password']) unset($data['password']);
-                
+                if (!$data['password'])
+                    unset($data['password']);
+
                 $success = $this->ion_auth_model->update($user_id, $data);
             }
 
@@ -132,7 +133,7 @@ class User extends MY_Controller {
             $data['error'] = validation_errors();
 
         $data['type'] = $type;
-        
+
         $this->load_view('pages/alter_user', $data);
     }
 
@@ -143,9 +144,9 @@ class User extends MY_Controller {
             if ($this->ion_auth->delete_user($user_id))
                 $data['success'] = true;
         }
-        
+
         $this->session->set_flashdata('message', 'User successfully deleted.');
-        
+
         redirect($this->agent->referrer());
     }
 

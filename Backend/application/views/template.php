@@ -22,6 +22,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
     <script src="//cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
     <script src="<?=base_url('resources/js/default.js')?>"></script>

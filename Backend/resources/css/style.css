@@ -28,14 +28,17 @@ body .btn-primary {
   background-color: #ffb800;
   border: none;
 }
-body .btn-primary:hover {
-  background-color: #ab7b00;
-  color: white;
+body .btn-primary:hover,
+body .btn-primary:active,
+body .btn-primary:focus {
+  background-color: #ab7b00 !important;
+  color: white!important;
 }
 body a {
   color: #ffb800;
 }
-body a:hover {
+body a:hover,
+body a:active {
   color: #ab7b00;
 }
 body .container {
