@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
         <div class="panel-body">
             <div class="box-header with-border">
-                <h3 class="box-title"><small>Please login with your email address and password below. <br><a href="<?=base_url()?>user/password_forgotten">Forgot your password?</a></small></h3>
+                <p class="box-title">Please login with your email address and password below. <br><a href="<?=base_url('user/password_forgotten')?>">Forgot your password?</a></p>
             </div>
             <?php if (isset($error) && strlen($error) > 0): ?>
             <div class="alert alert-danger" role="alert"><?= $error ?></div>

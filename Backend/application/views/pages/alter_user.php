@@ -1,7 +1,7 @@
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-pie-chart"></i> alter cms user</h3>
+            <h3 class="panel-title"><i class="fa fa-pie-chart"></i> <?= isset($user) ? 'alter' : 'add' ?> <?= $type === 'cms' ? 'cms' : 'app' ?> user</h3>
         </div>
         <div class="panel-body">
             <?php if (isset($error) && $error) : ?>
@@ -35,7 +35,7 @@
                 <label for="name">Password confirmation</label>
                 <input type="password" class="form-control" name="passconf" placeholder="Password confirmation" value="<?= set_value('passconf'); ?>">
             </div>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> <?= isset($floor) ? 'Save' : 'Create' ?></button>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> <?= isset($user) ? 'Save' : 'Create' ?></button>
             <?= form_close() ?>
         </div>
     </div>

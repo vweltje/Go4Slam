@@ -6,6 +6,8 @@ class User extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
+        
+        $this->load->model('users_model');
     }
 
     public function index() {
@@ -53,7 +55,6 @@ class User extends MY_Controller {
     public function users_overview($type = false) {
         $data = array();
         $this->load->model('groups_model');
-        $this->load->model('users_model');
 
         $data['type'] = $type;
         $user_ids = $this->groups_model->fields('id')->where('name', $type === 'cms' ? 'admin' : 'general')->with_users_groups('fields: user_id')->get_all()[0]['users_groups'];
@@ -83,8 +84,6 @@ class User extends MY_Controller {
                 ->set_rules('last_name', 'last name', 'trim|required');
         
         if ($user_id) {
-            $this->load->model('users_model');
-            
             $fields = array('first_name', 'prefix', 'last_name', 'email');
             $data['user'] = $this->users_model->fields($fields)->get($user_id);
         }
@@ -132,6 +131,8 @@ class User extends MY_Controller {
         if (validation_errors())
             $data['error'] = validation_errors();
 
+        $data['type'] = $type;
+        
         $this->load_view('pages/alter_user', $data);
     }
 

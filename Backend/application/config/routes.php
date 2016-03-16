@@ -61,3 +61,6 @@ $route['app_users'] = 'user/users_overview/app';
 $route['add_app_user'] = 'user/add_or_edit_user/app';
 $route['edit_app_user/(:num)'] = 'user/add_or_edit_user/app/$1';
 $route['delete_user/(:num)'] = 'user/delete_user/$1';
+$route['add_sponsor'] = 'sponsors/add_or_edit_sponsor';
+$route['edit_sponsor/(:num)'] = 'sponsors/add_or_edit_sponsor/$1';
+$route['delete_sponsor/(:num)'] = 'sponsors/delete_sponsor/$1';
