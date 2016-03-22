@@ -1,16 +1,48 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
-    
+class Api extends CI_Controller {
+
     // userid of the current user false if not singedin
-    public $current_user_id = false;
-    
-    public function __construct()
-    {
+    private $user_id = 0;
+    private $privatekey = '';
+    private $current_user = false;
+
+    public function __construct() {
         parent::__construct();
+        $this->check_api_key();
+        $this->load->model('users_model');
+        $headers = $this->input->request_headers();
+        $this->user_id = (isset($headers['user_id']) ? $headers['user_id'] : 0);
+        $this->privatekey = (isset($headers['privatekey']) ? $headers['privatekey'] : '');
+        if (!empty($user_id)) {
+            $this->current_user = $this->users_model->where(array('id' => $this->userid, 'privatekey' => $this->privatekey))->get();
+        }
     }
-    
+
+    /**
+     * Check if request is valid. 
+     */
+    private function check_api_key() {
+        $post_token = $this->input->get_request_header('token');
+        $post_datetime = $this->input->get_request_header('date');
+        $test_date = gmdate('Y-m-d H:i:s');
+        $post_token = sha1(config_item('api_salt_key') . $test_date);
+        $post_datetime = $test_date;
+        if ($post_token && $post_datetime) {
+            $date = gmdate('Y-m-d H:i:s');
+            if (strtotime($post_datetime) >= (strtotime($date) - 300) && strtotime($post_datetime) <= strtotime($date)) {
+                $token = sha1(config_item('api_salt_key') . $post_datetime);
+                if ($post_token === $token) {
+                    return true;
+                }
+            }
+        } else {
+            return $this->send_error('ERROR');
+        }
+    }
+
     /**
      * Send the response
      */
@@ -27,7 +59,7 @@ class Welcome extends CI_Controller {
     private function send_error($error) {
         header('Content-Type: application/json');
         echo json_encode(array(
-                'error' => $error
+            'error' => $error
         ));
         return;
     }
@@ -40,15 +72,23 @@ class Welcome extends CI_Controller {
         echo json_encode(array('success' => true));
         return;
     }
-    
+
     /**
      * Checks userid and privatekey against database.
      * If not found, sends error AUTH_FAIL.
      */
     private function check_auth() {
-        
+        if (empty($this->user_id) || empty($this->privatekey)) {
+            return $this->send_error('NOT_SIGNED_IN');
+        } 
+        elseif ($this->users_model->validate_privatekey($this->user_id, $this->privatekey)) {
+            return true;
+        }
+        else {
+            return $this->send_error('AUTH_FAIL');
+        }
     }
-    
+
     /**
      * Logs an event
      * user_id = id of the user who does the api call
@@ -58,20 +98,19 @@ class Welcome extends CI_Controller {
     private function log_event($user_id = false, $type = false, $data = array()) {
         if ($user_id !== false && $type !== false) {
             $this->load->model('event_log_model');
-
             $insert = array(
                 'user_id' => $user_id,
                 'type' => $type,
                 'data' => serialize($data)
             );
-            
-            if ($this->event_log_model->insert($insert)) return true;
+            if ($this->event_log_model->insert($insert)) {
+                return true;
+            }
         }
-        
         return false;
     }
-    
-     /**
+
+    /**
      * Checks email and password and generates a new privatekey.
      * POST:
      * - email
@@ -84,15 +123,37 @@ class Welcome extends CI_Controller {
     public function login() {
         $email = $this->input->post('email');
         $pass = $this->input->post('password');
+        if (!empty($email) && !empty($pass)) {
+            $user = $this->ion_auth_model->login($email, $pass);
+            if ($user && $this->ion_auth->in_group(array('admin', 'general'))) {
+                $key = $this->users_model->set_privatekey(true);
+                if (!$key) {
+                    $this->ion_auth->logout();
+                    return $this->send_error('ERROR');
+                }
+                return $this->send_response(array(
+                            'privatekey' => $key,
+                            'user_id' => $this->ion_auth->user()->row()->id
+                ));
+            } else {
+                $this->ion_auth->logout();
+            }
+        }
+        return $this->send_error('LOGIN_FAIL');
     }
-    
+
     /**
      * Logs out the current user
      */
     public function logout() {
-        
+        if (!$this->users_model->set_privatekey(false)) {
+            return $this->send_error('ERROR');
+        }
+        if ($this->ion_auth->logout()) {
+            return $this->send_success();
+        }
     }
-    
+
     /**
      * Generates a random token and mails a link containing a api/reset_password
      * url to reset the password
@@ -102,7 +163,7 @@ class Welcome extends CI_Controller {
     public function forgotten_password() {
         $email = $this->input->post('email');
     }
-    
+
     /**
      * NOT ACCESSED FROM THE APP
      * Allows the user to pick a new password.
@@ -112,7 +173,7 @@ class Welcome extends CI_Controller {
     public function reset_password($email = false, $token = false) {
         
     }
-    
+
     /**
      * Changes the user's password and regenerates the privatekey
      * POST:
@@ -124,11 +185,11 @@ class Welcome extends CI_Controller {
      */
     public function change_password() {
         $this->check_auth();
-        
+
         $pass = $this->input->post('password');
         $new_pass = $this->input->post('new_password');
     }
-    
+
     /**
      * Return a user's details
      * POST:
@@ -144,7 +205,7 @@ class Welcome extends CI_Controller {
     public function get_user_details() {
         
     }
-    
+
     /**
      * Edit user information
      * POST: 
@@ -161,7 +222,7 @@ class Welcome extends CI_Controller {
     public function edit_user_details() {
         $this->check_auth();
     }
-    
+
     /**
      * Get the scores of the tournaments
      * POST:
@@ -171,7 +232,7 @@ class Welcome extends CI_Controller {
     public function get_score_index() {
         
     }
-    
+
     /**
      * Get timeline contents
      * POST:
@@ -183,7 +244,7 @@ class Welcome extends CI_Controller {
     public function get_timeline() {
         
     }
-    
+
     /**
      * Get sponsor logos
      * Returns associative array:
@@ -192,7 +253,7 @@ class Welcome extends CI_Controller {
     public function get_sponsors() {
         
     }
-    
+
     /**
      * go4slam members can post content
      * POST:
@@ -203,4 +264,5 @@ class Welcome extends CI_Controller {
     public function post_content() {
         
     }
+
 }
