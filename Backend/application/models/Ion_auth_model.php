@@ -182,9 +182,9 @@ class Ion_auth_model extends CI_Model
 			return FALSE;
 		}
 		//bcrypt
+                $this->hash_method = config_item('hash_method');
 		if ($this->hash_method == 'bcrypt')
 		{
-			
 			if ($this->random_rounds)
 			{
 				$rand = rand($this->min_rounds,$this->max_rounds);

@@ -14,8 +14,10 @@ class Api extends CI_Controller {
         $this->check_api_key();
         $this->load->model('users_model');
         $headers = $this->input->request_headers();
-        $this->user_id = (isset($headers['user_id']) ? $headers['user_id'] : 0);
-        $this->privatekey = (isset($headers['privatekey']) ? $headers['privatekey'] : '');
+//        $this->user_id = (isset($headers['user_id']) ? $headers['user_id'] : 0);
+//        $this->privatekey = (isset($headers['privatekey']) ? $headers['privatekey'] : '');
+        $this->user_id = $this->ion_auth->user()->row()->id;// developing
+        $this->privatekey = 'c8928b6265b806d5fd2103c986713d0e31b72aba';// developing
         if (!empty($user_id)) {
             $this->current_user = $this->users_model->where(array('id' => $this->userid, 'privatekey' => $this->privatekey))->get();
         }
@@ -39,7 +41,8 @@ class Api extends CI_Controller {
                 }
             }
         } else {
-            return $this->send_error('ERROR');
+            $this->send_error('ERROR');
+            exit;
         }
     }
 
@@ -78,36 +81,16 @@ class Api extends CI_Controller {
      * If not found, sends error AUTH_FAIL.
      */
     private function check_auth() {
+        return true; // developing
         if (empty($this->user_id) || empty($this->privatekey)) {
-            return $this->send_error('NOT_SIGNED_IN');
-        } 
-        elseif ($this->users_model->validate_privatekey($this->user_id, $this->privatekey)) {
+            $this->send_error('NOT_SIGNED_IN');
+            exit;
+        } elseif ($this->users_model->validate_privatekey($this->user_id, $this->privatekey)) {
             return true;
+        } else {
+            $this->send_error('AUTH_FAIL');
+            exit;
         }
-        else {
-            return $this->send_error('AUTH_FAIL');
-        }
-    }
-
-    /**
-     * Logs an event
-     * user_id = id of the user who does the api call
-     * type = name of called function
-     * data = array with all the post values and containes success or error message
-     */
-    private function log_event($user_id = false, $type = false, $data = array()) {
-        if ($user_id !== false && $type !== false) {
-            $this->load->model('event_log_model');
-            $insert = array(
-                'user_id' => $user_id,
-                'type' => $type,
-                'data' => serialize($data)
-            );
-            if ($this->event_log_model->insert($insert)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -177,6 +160,8 @@ class Api extends CI_Controller {
     /**
      * Changes the user's password and regenerates the privatekey
      * POST:
+     * - user_id: the id of the current user
+     * - email: the email of the current user
      * - password: the current password
      * - new_password: the new password
      * Returns associative array:
@@ -185,9 +170,37 @@ class Api extends CI_Controller {
      */
     public function change_password() {
         $this->check_auth();
-
+        $id = $this->input->post('id');
+        $email = $this->input->post('email');
         $pass = $this->input->post('password');
         $new_pass = $this->input->post('new_password');
+        if (!empty($id) && !empty($email) && !empty($pass) && !empty($new_pass)) {
+            if (intval($id) === intval($this->user_id)) {
+                $user = $this->ion_auth_model->login($email, $pass);
+                if (!$user) {
+                    return $this->send_error('INVALID_LOGIN');
+                }
+                $update['salt'] = $this->ion_auth_model->salt();
+                $update['password'] = $this->ion_auth_model->hash_password($new_pass, $update['salt']);
+                if (!$this->users_model->where(array('id' => $this->user_id, 'email' => $email))->update($update)) {
+                    return $this->send_error('UPDATE_ERROR');
+                }
+                $user = $this->ion_auth_model->login($email, $new_pass);
+                if (!$user) {
+                    return $this->send_error('RELOGIN_FAIL');
+                }
+                $key = $this->users_model->set_privatekey(true);
+                if (!$key) {
+                    $this->ion_auth->logout();
+                    return $this->send_error('ERROR');
+                }
+                return $this->send_response(array(
+                            'privatekey' => $key,
+                            'user_id' => $this->ion_auth->user()->row()->id
+                ));
+            }
+        }
+        return $this->send_error('ERROR');
     }
 
     /**
