@@ -16,8 +16,8 @@ class Api extends CI_Controller {
         $headers = $this->input->request_headers();
 //        $this->user_id = (isset($headers['user_id']) ? $headers['user_id'] : 0);
 //        $this->privatekey = (isset($headers['privatekey']) ? $headers['privatekey'] : '');
-        $this->user_id = $this->ion_auth->user()->row()->id;// developing
-        $this->privatekey = 'c8928b6265b806d5fd2103c986713d0e31b72aba';// developing
+        $this->user_id = isset($this->ion_auth->user()->row()->id) ? $this->ion_auth->user()->row()->id : 0; // developing
+        $this->privatekey = 'c8928b6265b806d5fd2103c986713d0e31b72aba'; // developing
         if (!empty($user_id)) {
             $this->current_user = $this->users_model->where(array('id' => $this->userid, 'privatekey' => $this->privatekey))->get();
         }
@@ -145,6 +145,24 @@ class Api extends CI_Controller {
      */
     public function forgotten_password() {
         $email = $this->input->post('email');
+        if (!$this->users_model->fields(array('id'))->where('email', $email)->limit(1)->get()) {
+            return $this->send_error('NOT_REGISTERED');
+        }
+        $this->load->helper('string');
+        $this->load->library('email');
+        $token = random_string('sha1');
+        if (!$this->users_model->where('email', $email)->update(array('forgotten_password_code' => $token, 'forgotten_password_time' => time()))) {
+            return $this->send_error('INSERT_ERROR');
+        }
+        $this->email->from(config_item('email_from'), config_item('email_from_name'))
+                ->to($email)
+                ->subject('Passwrod reset | Go4Slam app')
+                ->message('Hello, <br><br> Press the link below to set a new password. <br><br><a href="' . base_url() . 'api/reset_password/' . urlencode($email) . '/' . urlencode($token) . '">Click here</a>')
+                ->set_mailtype('html');
+        if (!$this->email->send()) {
+            return $this->send_error('UNABLE_TO_SEND_EMAIL');
+        }
+        return $this->send_success();
     }
 
     /**
@@ -154,7 +172,31 @@ class Api extends CI_Controller {
      * $token STRING: token that was generated in forgotten_password()
      */
     public function reset_password($email = false, $token = false) {
-        
+        $data = array();
+        $this->form_validation->set_rules('password', 'Password', 'trim|required|matches[passconf]|min_length[8]');
+        $this->form_validation->set_rules('passconf', 'Password confirmation', 'trim|required');
+        $result = $this->users_model->fields(array('forgotten_password_time'))->where(array('email' => urldecode($email), 'forgotten_password_code' => $token))->get();
+        if (!isset($result['forgotten_password_time'])){
+            $data['error'] = 'Invalid input';
+        }
+        $forgotten_time = $result['forgotten_password_time'];
+        $expire_in = config_item('forgotten_password_expire_time');
+        if (time() <= $forgotten_time + $expire_in) {
+            if ($this->form_validation->run()) {
+                $salt = $this->ion_auth_model->salt();
+                $password = $this->ion_auth_model->hash_password($this->input->post('password'), $salt);
+                if (!$this->users_model->where(array('email' => urldecode($email), 'forgotten_password_code' => $token))->update(array('password' => $password, 'salt' => $salt, 'forgotten_password_time' => '', 'forgotten_password_code' => ''))) {
+                    $data['error'] = 'Error!';
+                }
+                $data['success'] = true;
+            }
+            if (validation_errors()) {
+                $data['error'] = validation_errors();
+            }
+        } else {
+            $data['error'] = 'Time expired';
+        }
+        $this->load->view('app_user/reset_password', $data);
     }
 
     /**
