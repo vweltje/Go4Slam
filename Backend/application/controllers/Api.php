@@ -14,10 +14,8 @@ class Api extends CI_Controller {
         $this->check_api_key();
         $this->load->model('users_model');
         $headers = $this->input->request_headers();
-//        $this->user_id = (isset($headers['user_id']) ? $headers['user_id'] : 0);
-//        $this->privatekey = (isset($headers['privatekey']) ? $headers['privatekey'] : '');
-        $this->user_id = isset($this->ion_auth->user()->row()->id) ? $this->ion_auth->user()->row()->id : 0; // developing
-        $this->privatekey = 'c8928b6265b806d5fd2103c986713d0e31b72aba'; // developing
+        $this->user_id = (isset($headers['user_id']) ? $headers['user_id'] : 0);
+        $this->privatekey = (isset($headers['privatekey']) ? $headers['privatekey'] : '');
         if (!empty($user_id)) {
             $this->current_user = $this->users_model->where(array('id' => $this->userid, 'privatekey' => $this->privatekey))->get();
         }
@@ -81,7 +79,6 @@ class Api extends CI_Controller {
      * If not found, sends error AUTH_FAIL.
      */
     private function check_auth() {
-        return true; // developing
         if (empty($this->user_id) || empty($this->privatekey)) {
             $this->send_error('NOT_SIGNED_IN');
             exit;
@@ -312,12 +309,17 @@ class Api extends CI_Controller {
     /**
      * go4slam members can post content
      * POST:
-     * - type STRING text - image - video
+     *  type STRING newsitem - blogpost - galery
+     * - newsitem 
+     *      - title
+     *      - short description
+     *      - description
+     *      - image
+     *      
      * - content STRING
      * Returns validation errors or true
      */
     public function post_content() {
         
     }
-
 }
