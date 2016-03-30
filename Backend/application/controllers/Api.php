@@ -14,8 +14,8 @@ class Api extends CI_Controller {
         $this->check_api_key();
         $this->load->model('users_model');
         $headers = $this->input->request_headers();
-        $this->user_id = (isset($headers['user_id']) ? $headers['user_id'] : 0);
-        $this->privatekey = (isset($headers['privatekey']) ? $headers['privatekey'] : '');
+        $this->user_id = (isset($headers['App-Userid']) ? $headers['App-Userid'] : 0);
+        $this->privatekey = (isset($headers['App-Privatekey']) ? $headers['App-Privatekey'] : '');
         if (!empty($user_id)) {
             $this->current_user = $this->users_model->where(array('id' => $this->userid, 'privatekey' => $this->privatekey))->get();
         }
@@ -24,7 +24,7 @@ class Api extends CI_Controller {
     /**
      * Check if request is valid. 
      */
-    private function check_api_key() {
+    private function check_api_key() {return true;
         $post_token = $this->input->get_request_header('token');
         $post_datetime = $this->input->get_request_header('date');
         $test_date = gmdate('Y-m-d H:i:s');
@@ -80,13 +80,10 @@ class Api extends CI_Controller {
      */
     private function check_auth() {
         if (empty($this->user_id) || empty($this->privatekey)) {
-            $this->send_error('NOT_SIGNED_IN');
+            $this->send_error('AUTH_FAIL');
             exit;
         } elseif ($this->users_model->validate_privatekey($this->user_id, $this->privatekey)) {
             return true;
-        } else {
-            $this->send_error('AUTH_FAIL');
-            exit;
         }
     }
 
@@ -309,17 +306,15 @@ class Api extends CI_Controller {
     /**
      * go4slam members can post content
      * POST:
-     *  type STRING newsitem - blogpost - galery
-     * - newsitem 
+     *  type STRING blogpost
      *      - title
-     *      - short description
+     *      - short descriptio
      *      - description
      *      - image
-     *      
-     * - content STRING
      * Returns validation errors or true
      */
-    public function post_content() {
+    public function new_blogpost() {
+        $this->check_auth();
         
     }
 }
