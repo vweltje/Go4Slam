@@ -24,7 +24,8 @@ class Api extends CI_Controller {
     /**
      * Check if request is valid. 
      */
-    private function check_api_key() {return true;
+    private function check_api_key() {
+        return true;
         $post_token = $this->input->get_request_header('token');
         $post_datetime = $this->input->get_request_header('date');
         $test_date = gmdate('Y-m-d H:i:s');
@@ -170,7 +171,7 @@ class Api extends CI_Controller {
         $this->form_validation->set_rules('password', 'Password', 'trim|required|matches[passconf]|min_length[8]');
         $this->form_validation->set_rules('passconf', 'Password confirmation', 'trim|required');
         $result = $this->users_model->fields(array('forgotten_password_time'))->where(array('email' => urldecode($email), 'forgotten_password_code' => $token))->get();
-        if (!isset($result['forgotten_password_time'])){
+        if (!isset($result['forgotten_password_time'])) {
             $data['error'] = 'Invalid input';
         }
         $forgotten_time = $result['forgotten_password_time'];
@@ -315,6 +316,34 @@ class Api extends CI_Controller {
      */
     public function new_blogpost() {
         $this->check_auth();
-        
+        $post_data = array(
+            'title' => $this->input->post('title'),
+            'short_description' => $this->input->post('short_description'),
+            'description' => $this->input->post('description'),
+            'user_id' => $this->user_id
+        );
+        if (!$post_data['title']) {
+            return $this->send_error('NO_TITLE');
+        } elseif (!$post_data['short_description']) {
+            return $this->send_error('NO_SHORT_DESCRIPTION');
+        } elseif (!$post_data['description']) {
+            return $this->send_error('NO_DESCRIPTION');
+        } elseif (!$_FILES['image']) {
+            return $this->send_error('NO_IMAGE');
+        }
+        foreach ($post_data as $key => $value) {
+            $post_data[$key] = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $value);
+        }
+        $this->load->helper('image_upload');
+        $img = do_image_upload(config_item('src_path_blog_images'), 10000, 250);
+        if (isset($img['error'])) {
+            return $this->send_error($post_data['image']['error']);
+        }
+        $post_data['image'] = $img['file_name'];
+        $this->load->model('blog_posts_model');
+        if (!$this->blog_posts_model->insert($post_data)) {
+            return $this->error('INSERT_FAIL');
+        }
+        return $this->send_success();
     }
 }

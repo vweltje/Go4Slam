@@ -5,6 +5,9 @@ function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250) 
     $config['upload_path'] = $path;
     $config['max_size'] = $max_filesize; // 1000 = 1 MB
     $config['allowed_types'] = 'png|PNG|jpeg|JPEG|jpg|JPG';
+    if (!isset($_FILES['image'])) {
+        return array('error' => 'No file to upload');
+    }
     $uploadedFile = pathinfo($_FILES['image']['name']);
     if (isset($uploadedFile['extension'])) {
         $ci->load->helper('string');
@@ -19,7 +22,7 @@ function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250) 
             $file = $ci->upload->data();
             if ($file['image_width'] < $target_size || $file['image_height'] < $target_size) {
                 unlink($config['upload_path'] . $file['file_name']);
-                return array('error' => '<p>The image you chose is too small.</p>');
+                return array('error' => '<p>The image you chose is to small.</p>');
             }
             $short_side = min($file['image_width'], $file['image_height']);
             $short_width = ($short_side === $file['image_width'] ? true : false);
