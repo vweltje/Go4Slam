@@ -17,6 +17,15 @@ body {
                 }
             }
         }
+        
+        &.panel-small {
+            width: calc(~'50% - 20px');
+            float: left;
+            
+            &:nth-child(odd) {
+                margin-right: 20px;
+            }
+        }
     }
     
     .btn-primary {

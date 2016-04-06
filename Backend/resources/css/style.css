@@ -24,6 +24,13 @@ body .panel.panel-default .panel-heading .fa-plus {
   float: right;
   cursor: pointer;
 }
+body .panel.panel-small {
+  width: calc(50% - 20px);
+  float: left;
+}
+body .panel.panel-small:nth-child(odd) {
+  margin-right: 20px;
+}
 body .btn-primary {
   background-color: #ffb800;
   border: none;

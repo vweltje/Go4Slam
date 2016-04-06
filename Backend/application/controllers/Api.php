@@ -299,9 +299,14 @@ class Api extends CI_Controller {
      * Get sponsor logos
      * Returns associative array:
      * - image STRING
+     * - name STRING
      */
     public function get_sponsors() {
-        
+        $this->load->model('sponsors_model');
+        if ($data['sponsors'] = $this->sponsors_model->fields(array('name', 'image'))->get_all()) {
+            return $this->send_response($data);
+        }
+        return $this->send_error('GET_FAIL');
     }
 
     /**

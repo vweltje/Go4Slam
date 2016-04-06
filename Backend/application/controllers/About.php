@@ -15,8 +15,10 @@ class About extends MY_Controller {
         $data['text'] = $this->db->select('text')->limit(1)->order_by('id', 'desc')->get('about')->row();
 
         if ($this->form_validation->run()) {
-            if ($this->db->empty_table('about')) 
-                $success = $this->db->insert('about', array('text' => $this->input->post('text')));
+            if ($this->db->empty_table('about')) {
+                $text = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $this->input->post('text'));
+                $success = $this->db->insert('about', array('text' => $text));
+            }
             
             if ($success) {
                 $this->session->set_flashdata('message', 'About text is successfully updated.');
