@@ -17,13 +17,29 @@
             </div>
             <div class="form-group">
                 <label for="image">Short description</label>
-                <textarea class="form-control" name="short_description"><?=isset($gallery) ? $gallery['short_description'] : ''?></textarea>
+                <textarea class="form-control" name="short_description"><?= isset($gallery) ? $gallery['short_description'] : '' ?></textarea>
             </div>
             <div class="form-group">
-                <input class="form-control" type="file" name="items[]" multiple>
+                <input id="files" onchange="read_files();" class="form-control" type="file" name="items[]" multiple>
             </div>
             <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
             <?= form_close() ?>
         </div>
     </div>
 </div>
+
+<script>
+    var data = [];
+    function read_files() {
+        var files = document.getElementById('files').files;
+        for (i = 0; i < files.length; i++) {
+            var reader = new FileReader();
+            reader.onloadend = function (e) {
+                if (e.target.readyState == FileReader.DONE) {
+                    data.push(btoa(e.target.result));
+                }
+            };
+            reader.readAsBinaryString(files[i]);
+        }
+    }
+</script>
