@@ -29,4 +29,3 @@ function preview_image() {
         document.getElementById('preview-img').src = e.target.result;
     };
 }
-;

@@ -17,13 +17,31 @@
             </div>
             <div class="form-group">
                 <label for="image">Short description</label>
-                <textarea class="form-control" name="short_description"><?= isset($gallery) ? $gallery['short_description'] : '' ?></textarea>
+                <textarea class="form-control" name="description"><?= isset($gallery) ? $gallery['description'] : '' ?></textarea>
             </div>
             <div class="form-group">
-                <input id="files" onchange="read_files();" class="form-control" type="file" name="items[]" multiple>
+                <label for="image">Images / videos</label>
+                <input id="files" onchange="read_files();" class="form-control" type="file" name="userfile[]" multiple>
             </div>
             <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
             <?= form_close() ?>
+
+            <?php $this->load->view('pages/inc/blueimp'); ?>
+
+            <div id="links">
+                <?php
+                if (isset($gallery)) :
+                    foreach ($gallery['items'] as $item) :
+                        ?>
+                        <a class="thumbnail" href="<?= site_url(config_item('src_path_gallery_images') . $item['src']) ?>" title="<?= $item['src'] ?>" data-gallery>
+                            <i onclick="event.preventDefault(); event.stopPropagation(); remove_gallery_img(<?= $item['id'] ?>, this)" class="fa fa-times-circle" aria-hidden="true"></i>
+                            <img width="150" src="<?= site_url(config_item('src_path_gallery_images') . $item['src']) ?>" alt="<?= $item['src'] ?>">
+                        </a>
+                        <?php
+                    endforeach;
+                endif;
+                ?>
+            </div>
         </div>
     </div>
 </div>
@@ -32,14 +50,28 @@
     var data = [];
     function read_files() {
         var files = document.getElementById('files').files;
-        for (i = 0; i < files.length; i++) {
+        for (i = 0;
+                i < files.length;
+                i++) {
             var reader = new FileReader();
             reader.onloadend = function (e) {
                 if (e.target.readyState == FileReader.DONE) {
-                    data.push(btoa(e.target.result));
+                    console.log(btoa(e.target.result));
+                    $('#links').append('<a class="thumbnail" href="data:image/png;base64,' + btoa(e.target.result) + '" title="' + btoa(e.target.result) + '" data-gallery><img width="150" src="data:image/png;base64,' + btoa(e.target.result) + '" alt="' + btoa(e.target.result) + '"></a>');
                 }
             };
             reader.readAsBinaryString(files[i]);
         }
+    }
+
+    function remove_gallery_img(id, element) {
+        $.post('<?= site_url('content/ajax_delete_gallery_image') ?>/' + id, function (response) {
+            response = JSON.parse(response);
+            if (response['success']) {
+                $(element).parent().remove();
+            } else {
+                alert('KABOEM!!!');
+            }
+        });
     }
 </script>

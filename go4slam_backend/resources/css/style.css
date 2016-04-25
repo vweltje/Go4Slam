@@ -76,6 +76,25 @@ body main #preview-img {
   width: auto;
   max-height: 270px;
 }
+body main #links {
+  margin-top: 20px;
+}
+body main #links a {
+  display: inline-block;
+  float: left;
+  margin-right: 5px;
+}
+body main #links a:hover > i {
+  opacity: 1;
+}
+body main #links a i {
+  position: absolute;
+  padding: 10px;
+  color: black;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  opacity: 0;
+}
 header {
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }

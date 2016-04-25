@@ -17,13 +17,19 @@
             </div>
             <div class="form-group">
                 <label for="image">Logo</label>
-                <input id="upload-img" onchange="preview_image();" type="file" class="form-control" name="image" placeholder="Logo" value="<?= set_value('image', isset($sponsor) ? $sponsor['image'] : ''); ?>">
+                <input id="upload-img" onchange="preview_image();" type="file" class="form-control" name="userfile" placeholder="Logo" value="<?= set_value('image', isset($sponsor) ? $sponsor['image'] : ''); ?>">
             </div>
             <div class="form-group">
-                <img id="preview-img" src="<?= isset($sponsor['image']) ? base_url(config_item('src_path_sponsor_images').$sponsor['image']) : '' ?>">
+                <div id="links">
+                    <a class="thumbnail" style="display: block; float: none;" href="<?= isset($sponsor['image']) ? base_url(config_item('src_path_sponsor_images') . $sponsor['image']) : '' ?>" title="<?= isset($sponsor['image']) ? $sponsor['image'] : '' ?>" data-gallery>
+                        <img class="thumbnail" id="preview-img" src="<?= isset($sponsor['image']) ? base_url(config_item('src_path_sponsor_images') . $sponsor['image']) : '' ?>">
+                    </a>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
             <?= form_close() ?>
+
+            <?php $this->load->view('pages/inc/blueimp'); ?>
         </div>
     </div>
 </div>

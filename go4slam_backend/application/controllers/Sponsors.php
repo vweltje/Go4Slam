@@ -21,7 +21,7 @@ class Sponsors extends MY_Controller {
         $data = array();
 
         $this->form_validation->set_rules('name', 'name', 'trim|required')
-                ->set_rules('image', 'image');
+                ->set_rules('userfile', 'image');
 
         if ($sponsor_id) 
             $data['sponsor'] = $this->sponsors_model->fields(array('name', 'image'))->get($sponsor_id);
@@ -34,14 +34,14 @@ class Sponsors extends MY_Controller {
                 'name' => ucwords($this->input->post('name'))
             );
 
-            if ($_FILES['image']['name']) {
+            if ($_FILES['userfile']['name']) {
                 $image = do_image_upload(config_item('src_path_sponsor_images'), 10000, 250);
 
                 if (isset($image['error'])) {
                     return $this->load_view('pages/alter_sponsor', $image);
                 }
 
-                $insert['image'] = $image['file_name'];
+                $insert['image'] = $image[0];
             }
 
             if (!$sponsor_id) {

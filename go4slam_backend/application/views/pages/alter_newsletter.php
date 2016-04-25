@@ -17,11 +17,11 @@
             </div>
             <div class="form-group">
                 <label for="short_description">Short description</label>
-                <textarea class="form-control" name="short_description" placeholder="Short description"><?= set_value('image', isset($newsletter) ? $sponsor['short_description'] : ''); ?></textarea>
+                <textarea class="form-control" name="short_description" placeholder="Short description"><?= set_value('image', isset($newsletter) ? $newsletter['short_description'] : ''); ?></textarea>
             </div>
             <div class="form-group">
                 <label for="short_description">Newsletter</label>
-                <input class="form-control" type="file" name="newsletter">
+                <?= isset($newsletter) ? '<br><a target="_blank" href="' . base_url(config_item('src_path_newsletters') . $newsletter['pdf']) . '">' . $newsletter['pdf'] . '</a>' : '<input class="form-control" type="file" name="newsletter">' ?>
             </div>
             <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
             <?= form_close() ?>

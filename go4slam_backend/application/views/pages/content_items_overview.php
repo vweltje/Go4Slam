@@ -58,29 +58,25 @@
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Short description</th>
-                        <th>Gallery</th>
+                        <th>description</th>
                         <th>Manage</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    if ($newsletters) :
-                        foreach ($newsletters as $newsleter) :
+                    if ($galleries) :
+                        foreach ($galleries as $gallery) :
                             ?>
                             <tr>
                                 <td>
-                                    <?= $newsleter['title'] ?>
+                                    <?= $gallery['title'] ?>
                                 </td>
                                 <td>
-                                    <a target="_blank" href="<?= base_url(config_item('src_path_newsletters') . $newsleter['pdf']) ?>"><?= $newsleter['pdf'] ?></a>
-                                </td>
-                                <td>
-                                    
+                                    <?= $gallery['description'] ?>
                                 </td>
                                 <td class="manage">
-                                    <i title="edit" onclick="window.location.href = '<?= base_url('edit_newsletter/' . $newsleter['id']) ?>'" class="fa fa-pencil"></i>
-                                    <i title="remove" data-link="<?= base_url('delete_newsletter/' . $newsleter['id']) ?>" class="fa fa-trash"></i>
+                                    <i title="edit" onclick="window.location.href = '<?= base_url('edit_gallery/' . $gallery['id']) ?>'" class="fa fa-pencil"></i>
+                                    <i title="remove" data-link="<?= base_url('delete_gallery/' . $gallery['id']) ?>" class="fa fa-trash"></i>
                                 </td>
                             </tr>
                             <?php

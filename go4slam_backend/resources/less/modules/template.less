@@ -85,5 +85,28 @@ body {
             width: auto;
             max-height: 270px;
         }
+        
+        #links {
+            margin-top: 20px;
+            
+            a {
+                display: inline-block;
+                float: left;
+                margin-right: 5px;
+                
+                &:hover > i {
+                    opacity: 1;
+                }
+                
+                i {
+                    position: absolute;
+                    padding: 10px;
+                    color: black;
+                    text-shadow: 1px 1px rgba(0,0,0,0.2);
+                    z-index: 1;
+                    opacity: 0;
+                }
+            }
+        }
     }
 }
