@@ -25,16 +25,13 @@ class Api extends CI_Controller {
      * Check if request is valid. 
      */
     private function check_api_key() {
-        return true;
-        $post_token = $this->input->get_request_header('token');
-        $post_datetime = $this->input->get_request_header('date');
-        $test_date = gmdate('Y-m-d H:i:s');
-        $post_token = sha1(config_item('api_salt_key') . $test_date);
-        $post_datetime = $test_date;
+        $post_token = $this->input->get_request_header('App-Request-Token');
+        $post_datetime = $this->input->get_request_header('App-Request-Timestamp');
+        $post_token = sha1(config_item('api_salt_key') . $post_datetime);
         if ($post_token && $post_datetime) {
             $date = gmdate('Y-m-d H:i:s');
             if (strtotime($post_datetime) >= (strtotime($date) - 300) && strtotime($post_datetime) <= strtotime($date)) {
-                $token = sha1(config_item('api_salt_key') . $post_datetime);
+                $token = sha1(config_item('api_request_key') . $post_datetime);
                 if ($post_token === $token) {
                     return true;
                 }
@@ -147,7 +144,7 @@ class Api extends CI_Controller {
         $this->load->library('email');
         $token = random_string('sha1');
         if (!$this->users_model->where('email', $email)->update(array('forgotten_password_code' => $token, 'forgotten_password_time' => time()))) {
-            return $this->send_error('INSERT_ERROR');
+            return $this->send_error('ERROR');
         }
         $this->email->from(config_item('email_from'), config_item('email_from_name'))
                 ->to($email)
@@ -306,7 +303,7 @@ class Api extends CI_Controller {
         if ($data['sponsors'] = $this->sponsors_model->fields(array('name', 'image'))->get_all()) {
             return $this->send_response($data);
         }
-        return $this->send_error('GET_FAIL');
+        return $this->send_error('ERROR');
     }
 
     /**
@@ -342,7 +339,7 @@ class Api extends CI_Controller {
         $this->load->helper('image_upload');
         $img = do_image_upload(config_item('src_path_blog_images'), 10000, 250);
         if (isset($img['error'])) {
-            return $this->send_error($post_data['image']['error']);
+            return $this->send_error('ERROR');
         }
         $post_data['image'] = $img['file_name'];
         $this->load->model('blog_posts_model');
