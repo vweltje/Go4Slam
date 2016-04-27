@@ -12,9 +12,9 @@ class Content extends MY_Controller {
     }
 
     public function index() {
-        $data['newsletters'] = $this->news_items_model->get_all();
-        $data['galleries'] = $this->galleries_model->get_all();
-
+        $data['newsletters'] = $this->news_items_model->order_by('created_at', 'desc')->get_all();
+        $data['galleries'] = $this->galleries_model->order_by('created_at', 'desc')->get_all();
+        
         $this->load_view('pages/content_items_overview', $data);
     }
 
@@ -28,7 +28,7 @@ class Content extends MY_Controller {
         }
         if ($this->form_validation->run()) {
             $insert = array(
-                'title' => $this->input->post('title'),
+                'title' => ucfirst($this->input->post('title')),
                 'short_description' => $this->input->post('short_description')
             );
             if (!$news_item_id) {
@@ -41,7 +41,8 @@ class Content extends MY_Controller {
                 $insert['pdf'] = $insert['pdf']['file_name'];
             }
             if (!$news_item_id) {
-                $this->news_items_model->insert($insert);
+                $id = $this->news_items_model->insert($insert);
+                $this->timeline_model->insert(array('item_id' => $id, 'type' => 'newsletter'));
             } else {
                 $this->news_items_model->update($insert, $news_item_id);
             }
@@ -57,8 +58,9 @@ class Content extends MY_Controller {
     public function delete_newsletter($news_item_id = false) {
         $data['success'] = false;
         if ($news_item_id) {
-            $newsletter = $this->sponsors_model->fields('pdf')->get($news_item_id)['pdf'];
-            if ($this->sponsors_model->delete($news_item_id)) {
+            $newsletter = $this->news_items_model->fields('pdf')->get($news_item_id)['pdf'];
+            if ($this->news_items_model->delete($news_item_id)) {
+                $this->timeline_model->delete(array('item_id' => $news_item_id, 'type' => 'newsletter'));
                 unlink(config_item('src_path_newsletters') . $newsletter);
                 $data['success'] = true;
             }
@@ -77,7 +79,7 @@ class Content extends MY_Controller {
         }
         if ($this->form_validation->run()) {
             $insert = array(
-                'title' => $this->input->post('title'),
+                'title' => ucfirst($this->input->post('title')),
                 'description' => $this->input->post('description')
             );
             $this->load->helper('image_upload_helper');
@@ -91,6 +93,7 @@ class Content extends MY_Controller {
                 foreach ($images as $image) {
                     $this->gallery_items_model->insert(array('gallery_id' => $id, 'src' => $image));
                 }
+                $this->timeline_model->insert(array('item_id' => $id, 'type' => 'gallery'));
             } else {
                 if ($images) {
                     foreach ($images as $image) {
@@ -127,6 +130,7 @@ class Content extends MY_Controller {
                     unlink(config_item('src_path_gallery_images') . $item['src']);
                     $this->gallery_items_model->delete($item['id']);
                 }
+                $this->timeline_model->delete(array('item_id' => $gallery_id, 'type' => 'gallery'));
                 $data['success'] = true;
             }
         }

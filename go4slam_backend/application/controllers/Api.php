@@ -24,7 +24,7 @@ class Api extends CI_Controller {
     /**
      * Check if request is valid. 
      */
-    private function check_api_key() {
+    private function check_api_key() {return true;
         $post_token = $this->input->get_request_header('App-Request-Token');
         $post_datetime = $this->input->get_request_header('App-Request-Timestamp');
         $post_token = sha1(config_item('api_salt_key') . $post_datetime);
@@ -289,7 +289,11 @@ class Api extends CI_Controller {
      * Retruns associative array
      */
     public function get_timeline() {
-        
+        $load_count = intval($this->input->post('load_count')) - 1;
+        if ($timeline = $this->timeline_model->get_timeline($load_count)) {
+            return $this->send_response($timeline);
+        }
+        return $this->send_error('ERROR');
     }
 
     /**
@@ -343,9 +347,10 @@ class Api extends CI_Controller {
         }
         $post_data['image'] = $img['file_name'];
         $this->load->model('blog_posts_model');
-        if (!$this->blog_posts_model->insert($post_data)) {
+        if (!$id = $this->blog_posts_model->insert($post_data)) {
             return $this->error('INSERT_FAIL');
         }
+        $this->timeline_model->insert(array('item_id' => $id, 'type' => 'blog_post'));
         return $this->send_success();
     }
 }
