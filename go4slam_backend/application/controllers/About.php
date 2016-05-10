@@ -12,7 +12,7 @@ class About extends MY_Controller {
         
         $this->form_validation->set_rules('text', 'text', 'required');
         
-        $data['text'] = $this->db->select('text')->limit(1)->order_by('id', 'desc')->get('about')->row();
+        $data['text'] = $this->db->select('text')->limit(1)->get('about')->row();
 
         if ($this->form_validation->run()) {
             if ($this->db->empty_table('about')) {

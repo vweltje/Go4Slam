@@ -70,3 +70,6 @@ $route['delete_newsletter/(:num)'] = 'content/delete_newsletter/$1';
 $route['add_gallery'] = 'content/add_or_edit_gallery';
 $route['edit_gallery/(:num)'] = 'content/add_or_edit_gallery/$1';
 $route['delete_gallery/(:num)'] = 'content/delete_gallery/$1';
+$route['add_score'] = 'content/add_or_edit_score';
+$route['edit_score/(:num)'] = 'content/add_or_edit_score/$1';
+$route['delete_score/(:num)'] = 'content/delete_score/$1';

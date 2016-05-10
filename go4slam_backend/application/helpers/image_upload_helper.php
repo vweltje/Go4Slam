@@ -16,10 +16,14 @@ function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250) 
     }
     foreach ($_FILES['userfile'] as $key => $val) {
         $i = 1;
-        foreach ($val as $v) {
-            $field_name = "file_" . $i;
-            $_FILES[$field_name][$key] = $v;
-            $i++;
+        if (is_object($val) || is_array($val)) {
+            foreach ($val as $v) {
+                $field_name = "file_" . $i;
+                $_FILES[$field_name][$key] = $v;
+                $i++;
+            }
+        } else {
+            $_FILES['file_'.$i] = $_FILES['userfile'];
         }
     }
     unset($_FILES['userfile']);

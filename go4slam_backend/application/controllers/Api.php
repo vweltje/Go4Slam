@@ -271,16 +271,6 @@ class Api extends CI_Controller {
     }
 
     /**
-     * Get the scores of the tournaments
-     * POST:
-     * - userid INTAGER of the requested user scores
-     * Returns associative array
-     */
-    public function get_score_index() {
-        
-    }
-
-    /**
      * Get timeline contents
      * POST:
      * - filter_type STRING

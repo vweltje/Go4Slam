@@ -9,12 +9,14 @@ class Content extends MY_Controller {
         $this->load->model('news_items_model');
         $this->load->model('galleries_model');
         $this->load->model('gallery_items_model');
+        $this->load->model('scores_model');
     }
 
     public function index() {
         $data['newsletters'] = $this->news_items_model->order_by('created_at', 'desc')->get_all();
         $data['galleries'] = $this->galleries_model->order_by('created_at', 'desc')->get_all();
-        
+        $data['scores'] = $this->scores_model->order_by('created_at', 'desc')->get_all();
+
         $this->load_view('pages/content_items_overview', $data);
     }
 
@@ -138,4 +140,59 @@ class Content extends MY_Controller {
         redirect($this->agent->referrer());
     }
 
+    public function add_or_edit_score($score_id = false) {
+        $data = array();
+        $this->form_validation->set_rules('player_name', 'Player name', 'trim|required')
+                ->set_rules('player_score', 'Player score', 'trim|required')
+                ->set_rules('player_2_name', 'Player 2 name', 'trim|required')
+                ->set_rules('player_2_score', 'Player 2 score', 'trim|required')
+                ->set_rules('description', 'Description', 'trim|required')
+                ->set_rules('image', 'Image');
+        if ($score_id) {
+            $data['score'] = $this->scores_model->get($score_id);
+        }
+        if ($this->form_validation->run()) {
+            $this->load->helper('image_upload');
+            $insert = array(
+                'player_name' => ucfirst($this->input->post('player_name')),
+                'player_score' => $this->input->post('player_score'),
+                'player_2_name' => ucfirst($this->input->post('player_2_name')),
+                'player_2_score' => $this->input->post('player_2_score'),
+                'description' => $this->input->post('description')
+            );
+            if ($_FILES['userfile']['name']) {
+                $image = do_image_upload(config_item('src_path_score_images'), 10000, 250);
+                if (isset($image['error'])) {
+                    return $this->load_view('pages/alter_score', $image);
+                }
+                $insert['image'] = $image[0];
+            }
+            if (!$score_id) {
+                $id = $this->scores_model->insert($insert);
+                $this->timeline_model->insert(array('item_id' => $id, 'type' => 'score'));
+            } else {
+                $this->scores_model->update($insert, $score_id);
+            }
+            $this->session->set_flashdata('message', 'Score successfully saved.');
+            redirect('content');
+        }
+        if (validation_errors()) {
+            $data['error'] = validation_errors();
+        }
+        $this->load_view('pages/alter_score', $data);
+    }
+
+    public function delete_score($score_id = false) {
+        $data['success'] = false;
+        if ($score_id) {
+            $score = $this->scores_model->fields('image')->get($score_id)['image'];
+            if ($this->scores_model->delete($score_id)) {
+                $this->timeline_model->delete(array('item_id' => $score_id, 'type' => 'score'));
+                unlink(config_item('src_path_score_images') . $score_id);
+                $data['success'] = true;
+            }
+        }
+        $this->session->set_flashdata('message', 'Score successfully deleted.');
+        redirect($this->agent->referrer());
+    }
 }
