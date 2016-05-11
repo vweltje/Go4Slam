@@ -24,7 +24,8 @@ class Api extends CI_Controller {
     /**
      * Check if request is valid. 
      */
-    private function check_api_key() {return true;
+    private function check_api_key() {
+        return true;
         $post_token = $this->input->get_request_header('App-Request-Token');
         $post_datetime = $this->input->get_request_header('App-Request-Timestamp');
         $post_token = sha1(config_item('api_salt_key') . $post_datetime);
@@ -238,19 +239,39 @@ class Api extends CI_Controller {
     }
 
     /**
-     * Return a user's details
+     * Return all user's details
      * POST:
      * - id INT: the id of the requested user. 
      * Returns associative array:
      * - first_name STRING
      * - prefix STRING
      * - last_name STRING
-     * - function STRING
-     * - email STRING
+     * - cover_image STRING: url to the user's cover image
      * - image STRING: url to the user's profile image
+     * - wta_ranking_double INT
+     * - nationale_ranking_single INT
+     * - nationale_ranking_double INT
      */
     public function get_user_details() {
-        
+        $user_id = intval($this->input->post('user_id'));
+        if (!$user_id) {
+            return $this->send_error('INVALID INPUT');
+        }
+        $fields = array(
+            'first_name',
+            'prefix',
+            'last_name',
+            'image',
+            'cover_image',
+            'wta_ranking_double',
+            'nationale_ranking_single',
+            'nationale_ranking_double'
+        );
+        if ($details = $this->users_model->fields($fields)->get($user_id)) {
+            $this->send_response($details);
+        } else {
+            return $this->send_error('ERROR');
+        }
     }
 
     /**
@@ -343,4 +364,5 @@ class Api extends CI_Controller {
         $this->timeline_model->insert(array('item_id' => $id, 'type' => 'blog_post'));
         return $this->send_success();
     }
+
 }

@@ -24,22 +24,25 @@ class Timeline_model extends MY_Model {
         $this->load->model('news_items_model');
         $this->load->model('galleries_model');
         $this->load->model('gallery_items_model');
+        $this->load->model('scores_model');
         foreach($timeline as &$item) {
+            $type = $item['type'];
             switch ($item['type']) {
                 case 'blog_post' :
                     $item = $this->blog_posts_model->get($item['item_id']);
-                    $item['type'] = 'blog_post';
                     break;
                 case 'newsletter' :
                     $item = $this->news_items_model->get($item['item_id']);
-                    $item['type'] = 'newsletter';
                     break;
                 case 'gallery' :
                     $item = $this->galleries_model->get($item['item_id']);
-                    $item['type'] = 'gallery';
                     $item['items'] = $this->gallery_items_model->get_all(array('gallery_id' => $item['id']));
                     break;
+                case 'score' :
+                    $item = $this->scores_model->get($item['item_id']);
+                    break;
             }
+            $item['type'] = $type;
         }
         return $timeline;
     }
