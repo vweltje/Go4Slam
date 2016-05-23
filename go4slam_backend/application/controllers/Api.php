@@ -289,6 +289,35 @@ class Api extends CI_Controller {
      */
     public function edit_user_details() {
         $this->check_auth();
+        $update_data = array(
+            'email' => $this->input->post('email'),
+            'first_name' => $this->input->post('first_name'),
+            'prefix' => $this->input->post('prefix'),
+            'last_name' => $this->input->post('last_name'),
+        );
+        $this->load->helper('image_upload_helper');
+        $cover_pic = do_image_upload(config_item('src_path_cover_images'), 10000, 500, 'image');
+        $profile_pic = do_image_upload(config_item('src_path_profile_pictures'), 10000, 500, 'cover_image');
+        if ($cover_pic) {
+            if (isset($cover_pic['error'])) {
+            $data['error'] = $cover_pic['error'];
+                return $this->load_view('pages/alter_newsletter', $data);
+            }
+            $update_data['cover_image'] = $cover_pic[0];
+            $update_data['image'] = $cover_pic[0];
+        }
+        if ($profile_pic) {
+            if (isset($profile_pic['error'])) {
+            $data['error'] = $profile_pic['error'];
+                return $this->load_view('pages/alter_newsletter', $data);
+            }
+            $update_data['cover_image'] = $profile_pic[0];
+            $update_data['image'] = $profile_pic[0];
+        }
+        if (!$this->db->where('id', $this->user_id)->update('users', $update_data)) {
+            return $this->send_error('ERROR');
+        }
+        return $this->send_success();
     }
 
     /**

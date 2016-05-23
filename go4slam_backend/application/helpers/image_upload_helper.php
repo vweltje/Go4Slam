@@ -1,10 +1,11 @@
 <?php
 
-function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250) {
+function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250, $file_name = false) {
     $ci = & get_instance();
     $ci->load->helper('string');
     $ci->load->library('upload');
     $ci->load->library('image_lib');
+    $file_name = ($file_name ? $file_name : 'userfile');
     $names = array();
     $upload_conf = array(
         'upload_path' => $path,
@@ -14,7 +15,7 @@ function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250) 
     if (empty($_FILES)) {
         return array('error' => 'No file to upload');
     }
-    foreach ($_FILES['userfile'] as $key => $val) {
+    foreach ($_FILES[$file_name] as $key => $val) {
         $i = 1;
         if (is_object($val) || is_array($val)) {
             foreach ($val as $v) {
@@ -23,10 +24,10 @@ function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250) 
                 $i++;
             }
         } else {
-            $_FILES['file_'.$i] = $_FILES['userfile'];
+            $_FILES['file_'.$i] = $_FILES[$file_name];
         }
     }
-    unset($_FILES['userfile']);
+    unset($_FILES[$file_name]);
     foreach ($_FILES as $img_name => $img_data) {
         $img_info = pathinfo($_FILES[$img_name]['name']);
         if (isset($img_info['extension'])) {
