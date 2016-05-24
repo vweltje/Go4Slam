@@ -25,7 +25,6 @@ class Api extends CI_Controller {
      * Check if request is valid. 
      */
     private function check_api_key() {
-        return true;
         $post_token = $this->input->get_request_header('App-Request-Token');
         $post_datetime = $this->input->get_request_header('App-Request-Timestamp');
         $post_token = sha1(config_item('api_salt_key') . $post_datetime);
