@@ -20,6 +20,20 @@ $(function () {
             'insertdatetime media table contextmenu paste code'
         ]
     });
+    
+    if ($('#analytics').length === 1) {
+        $('.thumbnail').each(function(i, e) {
+            var type = $(e).attr('data-type');
+            $.post(site_url + 'analytics/get_results', {type: type}, function(response) {
+                response = JSON.parse(response);
+                if (typeof response['error'] === 'undefined' && typeof response['count'] !== 'undefined') {
+                    $(e).find('span').html(response['count']);
+                } else {
+                    $('.panel').before('<div class="alert alert-danger" role="alert">Something went wrong, please reload this page. <a href=".">Reload</a></div>');
+                }
+            });
+        });
+    }
 });
 
 function preview_image() {

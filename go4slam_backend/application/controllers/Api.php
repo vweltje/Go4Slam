@@ -85,6 +85,15 @@ class Api extends CI_Controller {
         }
     }
 
+    private function event_log() {
+        $this->load->model('logging_model');
+        $insert = array(
+            'action' => $this->router->method,
+            'created_at' => gmdate('Y-m-d H:i:s', time())
+        );
+        return $this->logging_model->insert($insert);
+    }
+
     /**
      * Checks email and password and generates a new privatekey.
      * POST:
@@ -106,6 +115,7 @@ class Api extends CI_Controller {
                     $this->ion_auth->logout();
                     return $this->send_error('ERROR');
                 }
+                $this->event_log();
                 return $this->send_response(array(
                             'privatekey' => $key,
                             'user_id' => $this->ion_auth->user()->row()->id
@@ -267,6 +277,7 @@ class Api extends CI_Controller {
             'nationale_ranking_double'
         );
         if ($details = $this->users_model->fields($fields)->get($user_id)) {
+            $this->event_log();
             $this->send_response($details);
         } else {
             return $this->send_error('ERROR');
@@ -299,7 +310,7 @@ class Api extends CI_Controller {
         $profile_pic = do_image_upload(config_item('src_path_profile_pictures'), 10000, 500, 'cover_image');
         if ($cover_pic) {
             if (isset($cover_pic['error'])) {
-            $data['error'] = $cover_pic['error'];
+                $data['error'] = $cover_pic['error'];
                 return $this->load_view('pages/alter_newsletter', $data);
             }
             $update_data['cover_image'] = $cover_pic[0];
@@ -307,7 +318,7 @@ class Api extends CI_Controller {
         }
         if ($profile_pic) {
             if (isset($profile_pic['error'])) {
-            $data['error'] = $profile_pic['error'];
+                $data['error'] = $profile_pic['error'];
                 return $this->load_view('pages/alter_newsletter', $data);
             }
             $update_data['cover_image'] = $profile_pic[0];
@@ -316,6 +327,7 @@ class Api extends CI_Controller {
         if (!$this->db->where('id', $this->user_id)->update('users', $update_data)) {
             return $this->send_error('ERROR');
         }
+        $this->event_log();
         return $this->send_success();
     }
 
@@ -330,6 +342,7 @@ class Api extends CI_Controller {
     public function get_timeline() {
         $load_count = intval($this->input->post('load_count')) - 1;
         if ($timeline = $this->timeline_model->get_timeline($load_count)) {
+            $this->event_log();
             return $this->send_response($timeline);
         }
         return $this->send_error('ERROR');
@@ -390,6 +403,7 @@ class Api extends CI_Controller {
             return $this->error('INSERT_FAIL');
         }
         $this->timeline_model->insert(array('item_id' => $id, 'type' => 'blog_post'));
+        $this->event_log();
         return $this->send_success();
     }
 
