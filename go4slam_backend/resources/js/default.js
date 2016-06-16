@@ -20,11 +20,11 @@ $(function () {
             'insertdatetime media table contextmenu paste code'
         ]
     });
-    
+
     if ($('#analytics').length === 1) {
-        $('.thumbnail').each(function(i, e) {
+        $('.thumbnail').each(function (i, e) {
             var type = $(e).attr('data-type');
-            $.post(site_url + 'analytics/get_results', {type: type}, function(response) {
+            $.post(site_url + 'analytics/get_results', {type: type}, function (response) {
                 response = JSON.parse(response);
                 if (typeof response['error'] === 'undefined' && typeof response['count'] !== 'undefined') {
                     $(e).find('span').html(response['count']);
@@ -34,6 +34,11 @@ $(function () {
             });
         });
     }
+
+    jQuery.datetimepicker.setLocale('nl');
+    $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d H:i:s'
+    });
 });
 
 function preview_image() {

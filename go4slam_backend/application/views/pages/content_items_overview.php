@@ -45,7 +45,7 @@
     </div>
     <div class="panel panel-default panel-small">
         <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-newspaper-o"></i> Galleries <i title="add" class="fa fa-plus" onclick="window.location.href = '<?= base_url('add_gallery') ?>'"></i></h3>
+            <h3 class="panel-title"><i class="fa fa-picture-o" aria-hidden="true"></i> Galleries <i title="add" class="fa fa-plus" onclick="window.location.href = '<?= base_url('add_gallery') ?>'"></i></h3>
         </div>
         <div class="panel-body">
             <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
@@ -65,7 +65,7 @@
                                 <td>
                                     <?= $gallery['title'] ?>
                                 </td>
-                                <td>
+                                <td style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 200px;">
                                     <?= $gallery['description'] ?>
                                 </td>
                                 <td class="manage">
@@ -83,7 +83,7 @@
     </div>
     <div class="panel panel-default panel-small">
         <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-newspaper-o"></i> Scores <i title="add" class="fa fa-plus" onclick="window.location.href = '<?= base_url('add_score') ?>'"></i></h3>
+            <h3 class="panel-title"><i class="fa fa-star" aria-hidden="true"></i> Scores <i title="add" class="fa fa-plus" onclick="window.location.href = '<?= base_url('add_score') ?>'"></i></h3>
         </div>
         <div class="panel-body">
             <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
@@ -107,8 +107,47 @@
                                     <?= $score['player_score'] . ' - ' . $score['player_2_score'] ?>
                                 </td>
                                 <td class="manage">
-                                    <i title="edit" onclick="window.location.href = '<?= base_url('edit_score/' . $gallery['id']) ?>'" class="fa fa-pencil"></i>
-                                    <i title="remove" data-link="<?= base_url('delete_score/' . $gallery['id']) ?>" class="fa fa-trash"></i>
+                                    <i title="edit" onclick="window.location.href = '<?= base_url('edit_score/' . $score['id']) ?>'" class="fa fa-pencil"></i>
+                                    <i title="remove" data-link="<?= base_url('delete_score/' . $score['id']) ?>" class="fa fa-trash"></i>
+                                </td>
+                            </tr>
+                            <?php
+                        endforeach;
+                    endif;
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="panel panel-default panel-small">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-calendar" aria-hidden="true"></i> Events <i title="add" class="fa fa-plus" onclick="window.location.href = '<?= base_url('add_event') ?>'"></i></h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Players</th>
+                        <th>Score</th>
+                        <th>Manage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($events) :
+                        foreach ($events as $event) :
+                            ?>
+                            <tr>
+                                <td>
+                                    <?= $event['title'] ?>
+                                </td>
+                                <td>
+                                    <?= $event['start_date'] ?>
+                                </td>
+                                <td class="manage">
+                                    <i title="edit" onclick="window.location.href = '<?= base_url('edit_event/' . $event['id']) ?>'" class="fa fa-pencil"></i>
+                                    <i title="remove" data-link="<?= base_url('delete_event/' . $event['id']) ?>" class="fa fa-trash"></i>
                                 </td>
                             </tr>
                             <?php

@@ -27,7 +27,6 @@ class Api extends CI_Controller {
     private function check_api_key() {
         $post_token = $this->input->get_request_header('App-Request-Token');
         $post_datetime = $this->input->get_request_header('App-Request-Timestamp');
-        $post_token = sha1(config_item('api_salt_key') . $post_datetime);
         if ($post_token && $post_datetime) {
             $date = gmdate('Y-m-d H:i:s');
             if (strtotime($post_datetime) >= (strtotime($date) - 300) && strtotime($post_datetime) <= strtotime($date)) {

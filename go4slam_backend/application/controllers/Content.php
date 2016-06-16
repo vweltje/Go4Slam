@@ -10,13 +10,19 @@ class Content extends MY_Controller {
         $this->load->model('galleries_model');
         $this->load->model('gallery_items_model');
         $this->load->model('scores_model');
+        $this->load->model('events_model');
     }
 
     public function index() {
         $data['newsletters'] = $this->news_items_model->order_by('created_at', 'desc')->get_all();
         $data['galleries'] = $this->galleries_model->order_by('created_at', 'desc')->get_all();
         $data['scores'] = $this->scores_model->order_by('created_at', 'desc')->get_all();
-
+        $data['events'] = $this->events_model->order_by('created_at', 'desc')->get_all();
+        
+        foreach ($data['events'] as &$event) {
+            $event['start_date'] = date('d-m-Y H:i:s', strtotime($event['start_date']));
+        }
+        
         $this->load_view('pages/content_items_overview', $data);
     }
 
@@ -71,7 +77,7 @@ class Content extends MY_Controller {
         redirect($this->agent->referrer());
     }
 
-    public function add_or_edit_gallery($gallery_id = false) {
+    public function add_or_edit_gallery($gallery_id = false) {die('gg');
         $data = array();
         $this->form_validation->set_rules('title', 'title', 'trim|required')
                 ->set_rules('description', 'description', 'trim|required')
@@ -193,6 +199,49 @@ class Content extends MY_Controller {
             }
         }
         $this->session->set_flashdata('message', 'Score successfully deleted.');
+        redirect($this->agent->referrer());
+    }
+    
+    public function add_or_edit_event($event_id = false) {
+        $data = array();
+        $this->form_validation->set_rules('title', 'title', 'trim|required')
+                ->set_rules('short_description', 'short_description', 'trim|required')
+                ->set_rules('start_date', 'start date', 'required')
+                ->set_rules('end_date', 'end date', 'required');
+        if ($event_id) {
+            $data['event'] = $this->events_model->fields(array('title', 'short_description', 'start_date', 'end_date'))->get($event_id);
+            $data['event']['start_date'] = date('d-m-Y H:i:s', strtotime($data['event']['start_date']));
+            $data['event']['end_date'] = date('d-m-Y H:i:s', strtotime($data['event']['end_date']));
+        }
+        if ($this->form_validation->run()) {
+            $insert = array(
+                'title' => ucfirst($this->input->post('title')),
+                'short_description' => $this->input->post('short_description'),
+                'start_date' => date('Y-m-d H:i:s', strtotime($this->input->post('start_date'))),
+                'end_date' => date('Y-m-d H:i:s', strtotime($this->input->post('end_date')))
+            );
+            if (!$event_id) {
+                $id = $this->events_model->insert($insert);
+            } else {
+                $this->events_model->update($insert, $event_id);
+            }
+            $this->session->set_flashdata('message', 'Event successfully saved.');
+            redirect('content');
+        }
+        if (validation_errors()) {
+            $data['error'] = validation_errors();
+        }
+        $this->load_view('pages/alter_event', $data);
+    }
+
+    public function delete_event($event_id = false) {
+        $data['success'] = false;
+        if ($event_id) {
+            if ($this->events_model->delete($event_id)) {
+                $data['success'] = true;
+            }
+        }
+        $this->session->set_flashdata('message', 'Event successfully deleted.');
         redirect($this->agent->referrer());
     }
 }
