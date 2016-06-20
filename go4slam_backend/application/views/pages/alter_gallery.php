@@ -13,11 +13,11 @@
             <?= form_open_multipart() ?>
             <div class="form-group">
                 <label for="name">Title</label>
-                <input type="text" class="form-control" name="title" placeholder="Title" value="<?= set_value('first_name', isset($gallery) ? $gallery['title'] : ''); ?>">
+                <input type="text" class="form-control" name="title" placeholder="Title" maxlength="255" value="<?= set_value('first_name', isset($gallery) ? $gallery['title'] : ''); ?>">
             </div>
             <div class="form-group">
                 <label for="image">Short description</label>
-                <textarea class="form-control" name="description"><?= isset($gallery) ? $gallery['description'] : '' ?></textarea>
+                <textarea class="form-control" name="description" maxlength="255"><?= isset($gallery) ? $gallery['description'] : '' ?></textarea>
             </div>
             <div class="form-group">
                 <label for="image">Images / videos</label>

@@ -11,11 +11,14 @@ class Api extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+
+        $this->output->set_header("Access-Control-Allow-Origin: *");
+        $this->output->set_header("Access-Control-Expose-Headers: Access-Control-Allow-Origin");
+
         $this->check_api_key();
         $this->load->model('users_model');
-        $headers = $this->input->request_headers();
-        $this->user_id = (isset($headers['App-Userid']) ? $headers['App-Userid'] : 0);
-        $this->privatekey = (isset($headers['App-Privatekey']) ? $headers['App-Privatekey'] : '');
+        $this->user_id = ($this->input->post('App-Userid') ? $this->input->post('App-Userid') : 0);
+        $this->privatekey = ($this->input->post('App-Privatekey') ? $this->input->post('App-Privatekey') : '');
         if (!empty($user_id)) {
             $this->current_user = $this->users_model->where(array('id' => $this->userid, 'privatekey' => $this->privatekey))->get();
         }
@@ -25,8 +28,8 @@ class Api extends CI_Controller {
      * Check if request is valid. 
      */
     private function check_api_key() {
-        $post_token = $this->input->get_request_header('App-Request-Token');
-        $post_datetime = $this->input->get_request_header('App-Request-Timestamp');
+        $post_token = $this->input->post('App-Request-Token');
+        $post_datetime = $this->input->post('App-Request-Timestamp');
         if ($post_token && $post_datetime) {
             $date = gmdate('Y-m-d H:i:s');
             if (strtotime($post_datetime) >= (strtotime($date) - 300) && strtotime($post_datetime) <= strtotime($date)) {
@@ -158,46 +161,12 @@ class Api extends CI_Controller {
         $this->email->from(config_item('email_from'), config_item('email_from_name'))
                 ->to($email)
                 ->subject('Passwrod reset | Go4Slam app')
-                ->message('Hello, <br><br> Press the link below to set a new password. <br><br><a href="' . base_url() . 'api/reset_password/' . urlencode($email) . '/' . urlencode($token) . '">Click here</a>')
+                ->message('Hello, <br><br> Press the link below to set a new password. <br><br><a href="' . base_url() . 'user/reset_password/' . urlencode($email) . '/' . urlencode($token) . '">Click here</a>')
                 ->set_mailtype('html');
         if (!$this->email->send()) {
             return $this->send_error('UNABLE_TO_SEND_EMAIL');
         }
         return $this->send_success();
-    }
-
-    /**
-     * NOT ACCESSED FROM THE APP
-     * Allows the user to pick a new password.
-     * $email STRING: urlencoded email
-     * $token STRING: token that was generated in forgotten_password()
-     */
-    public function reset_password($email = false, $token = false) {
-        $data = array();
-        $this->form_validation->set_rules('password', 'Password', 'trim|required|matches[passconf]|min_length[8]');
-        $this->form_validation->set_rules('passconf', 'Password confirmation', 'trim|required');
-        $result = $this->users_model->fields(array('forgotten_password_time'))->where(array('email' => urldecode($email), 'forgotten_password_code' => $token))->get();
-        if (!isset($result['forgotten_password_time'])) {
-            $data['error'] = 'Invalid input';
-        }
-        $forgotten_time = $result['forgotten_password_time'];
-        $expire_in = config_item('forgotten_password_expire_time');
-        if (time() <= $forgotten_time + $expire_in) {
-            if ($this->form_validation->run()) {
-                $salt = $this->ion_auth_model->salt();
-                $password = $this->ion_auth_model->hash_password($this->input->post('password'), $salt);
-                if (!$this->users_model->where(array('email' => urldecode($email), 'forgotten_password_code' => $token))->update(array('password' => $password, 'salt' => $salt, 'forgotten_password_time' => '', 'forgotten_password_code' => ''))) {
-                    $data['error'] = 'Error!';
-                }
-                $data['success'] = true;
-            }
-            if (validation_errors()) {
-                $data['error'] = validation_errors();
-            }
-        } else {
-            $data['error'] = 'Time expired';
-        }
-        $this->load->view('app_user/reset_password', $data);
     }
 
     /**
@@ -339,10 +308,12 @@ class Api extends CI_Controller {
      * Retruns associative array
      */
     public function get_timeline() {
-        $load_count = intval($this->input->post('load_count')) - 1;
-        if ($timeline = $this->timeline_model->get_timeline($load_count)) {
-            $this->event_log();
-            return $this->send_response($timeline);
+        $load_count = $this->input->post('load_count');
+        if ($load_count) {
+            if ($timeline = $this->timeline_model->get_timeline(intval($load_count) - 1)) {
+                $this->event_log();
+                return $this->send_response($timeline);
+            }
         }
         return $this->send_error('ERROR');
     }
@@ -404,6 +375,20 @@ class Api extends CI_Controller {
         $this->timeline_model->insert(array('item_id' => $id, 'type' => 'blog_post'));
         $this->event_log();
         return $this->send_success();
+    }
+
+    public function get_calendar() {
+        $start = date('Y-m-d H:i:s', strtotime($this->input->post('start_date')));
+        $end = date('Y-m-d H:i:s', strtotime($this->input->post('end_date')));
+        if ($start && $end) {
+            $this->load->model('events_model');
+            if ($events = $this->events_model->get_all(array('start_date >=' => $start, 'end_date <=' => $end))) {
+                $this->event_log();
+                return $this->send_response($events);
+            }
+        } else {
+            return $this->send_error('ERROR');
+        }
     }
 
 }

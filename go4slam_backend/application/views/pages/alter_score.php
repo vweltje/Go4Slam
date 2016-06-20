@@ -15,22 +15,22 @@
             <div class="well">
                 <div class="form-group">
                     <label for="title">Name</label>
-                    <input type="text" class="form-control" name="player_name" placeholder="Name" value="<?= set_value('player_name', isset($score) ? $score['player_name'] : ''); ?>">
+                    <input type="text" class="form-control" name="player_name" maxlength="255" placeholder="Name" value="<?= set_value('player_name', isset($score) ? $score['player_name'] : ''); ?>">
                 </div>
                 <div class="form-group">
                     <label for="title">Score</label> <small>for example 2/4</small>
-                    <input type="text" class="form-control" name="player_score" placeholder="Score" value="<?= set_value('player_score', isset($score) ? $score['player_score'] : ''); ?>">
+                    <input type="text" class="form-control" name="player_score" placeholder="Score" maxlength="255" value="<?= set_value('player_score', isset($score) ? $score['player_score'] : ''); ?>">
                 </div>
             </div>
             <label>Player 2</label>
             <div class="well">
                 <div class="form-group">
                     <label for="title">Name</label>
-                    <input type="text" class="form-control" name="player_2_name" placeholder="Name" value="<?= set_value('player_2_name', isset($score) ? $score['player_2_name'] : ''); ?>">
+                    <input type="text" class="form-control" name="player_2_name" placeholder="Name" maxlength="255" value="<?= set_value('player_2_name', isset($score) ? $score['player_2_name'] : ''); ?>">
                 </div>
                 <div class="form-group">
                     <label for="title">Score</label> <small>for example 2/4</small>
-                    <input type="text" class="form-control" name="player_2_score" placeholder="Score" value="<?= set_value('player_2_score', isset($score) ? $score['player_2_score'] : ''); ?>">
+                    <input type="text" class="form-control" name="player_2_score" placeholder="Score" maxlength="255" value="<?= set_value('player_2_score', isset($score) ? $score['player_2_score'] : ''); ?>">
                 </div>
             </div>
             <div class="form-group">

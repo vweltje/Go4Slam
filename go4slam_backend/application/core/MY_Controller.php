@@ -7,7 +7,7 @@ class MY_Controller extends CI_Controller {
      */
     private $login_exceptions = array(
         'password_forgotten',
-        'password_reset',
+        'reset_password',
         'login',
         'add_cms_user',
         'get_sponsors',

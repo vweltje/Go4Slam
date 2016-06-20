@@ -29,14 +29,16 @@ class Content extends MY_Controller {
     public function add_or_edit_newsletter($news_item_id = false) {
         $data = array();
         $this->form_validation->set_rules('title', 'title', 'trim|required')
+                ->set_rules('number', 'newsletter number', 'trim|required|numeric')
                 ->set_rules('short_description', 'short_description', 'trim|required')
                 ->set_rules('newsletter', 'newsletter');
         if ($news_item_id) {
-            $data['newsletter'] = $this->news_items_model->fields(array('title', 'short_description', 'pdf'))->get($news_item_id);
+            $data['newsletter'] = $this->news_items_model->fields(array('title', 'number'. 'short_description', 'pdf'))->get($news_item_id);
         }
         if ($this->form_validation->run()) {
             $insert = array(
                 'title' => ucfirst($this->input->post('title')),
+                'number' => intval($this->input->post('number')),
                 'short_description' => $this->input->post('short_description')
             );
             if (!$news_item_id) {
@@ -77,7 +79,7 @@ class Content extends MY_Controller {
         redirect($this->agent->referrer());
     }
 
-    public function add_or_edit_gallery($gallery_id = false) {die('gg');
+    public function add_or_edit_gallery($gallery_id = false) {
         $data = array();
         $this->form_validation->set_rules('title', 'title', 'trim|required')
                 ->set_rules('description', 'description', 'trim|required')

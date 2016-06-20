@@ -154,4 +154,64 @@ class User extends MY_Controller {
         $this->load_view('pages/app_users_overview');
     }
 
+    public function password_forgotten() {
+        $this->form_validation->set_rules('email', 'E-mail', 'trim|required');
+        if ($this->form_validation->run()) {
+            $email = $this->input->post('email');
+            if ($this->users_model->fields(array('id'))->where('email', $email)->limit(1)->get()) {
+                $this->load->helper('string');
+                $this->load->library('email');
+                $token = random_string('sha1');
+                $this->users_model->where('email', $this->input->post('email'))->update(array('forgotten_password_code' => $token, 'forgotten_password_time' => time()));
+                $this->email->from($this->config->item('email_from'), $this->config->item('email_from_name'))
+                        ->to($email)
+                        ->subject('Password reset - GO4SLAM')
+                        ->message('Hello, <br><br> Press the link below to set a new password. <br><br><a href="' . base_url() . 'user/reset_password/' . urlencode($email) . '/' . urlencode($token) . '">Click here</a><br><br>Best regards, <br>GO4SLAM.')
+                        ->set_mailtype('html');
+                if ($this->email->send()) {
+                    $this->session->set_flashdata('message', 'We have send a verification email.');
+                    redirect('user/login');
+                } else {
+                    $data['error'] = 'We are not able to send you an email, please contact the administrator.';
+                }
+            } else {
+                $data['error'] = 'This emailaddres seems to be not registered.';
+            }
+        } else {
+            if (validation_errors()) {
+                $data['error'] = validation_errors();
+            }
+        }
+        $this->load_view('pages/password_forgotten');
+    }
+
+    public function reset_password($email = false, $token = false) {
+        $data = array();
+        $this->form_validation->set_rules('password', 'Password', 'trim|required|matches[passconf]|min_length[8]');
+        $this->form_validation->set_rules('passconf', 'Password confirmation', 'trim|required');
+        $result = $this->users_model->fields(array('forgotten_password_time'))->where(array('email' => urldecode($email), 'forgotten_password_code' => $token))->get();
+        if (isset($result['forgotten_password_time'])) {
+            $forgotten_time = $result['forgotten_password_time'];
+            $expire_in = config_item('forgotten_password_expire_time');
+            if (time() <= ($forgotten_time + $expire_in)) {
+                if ($this->form_validation->run()) {
+                    $salt = $this->ion_auth_model->salt();
+                    $password = $this->ion_auth_model->hash_password($this->input->post('password'), $salt);
+                    if (!$this->users_model->where(array('email' => urldecode($email), 'forgotten_password_code' => $token))->update(array('password' => $password, 'salt' => $salt, 'forgotten_password_time' => '', 'forgotten_password_code' => ''))) {
+                        $data['run_error'] = 'ERROR!';
+                    }
+                    $data['success'] = true;
+                }
+                if (validation_errors()) {
+                    $data['run_error'] = validation_errors();
+                }
+            } else {
+                $data['error'] = 'Time expired';
+            }
+        } else {
+            $data['error'] = 'Invalid input';
+        }
+        $this->load->view('reset_password', $data);
+    }
+
 }

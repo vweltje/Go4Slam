@@ -5,7 +5,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>Reset password | Go4Slam app</title>
+        <title>GO4SLAM | Reset Password</title>
+        <link rel="shortcut icon" type="image/png" href="<?=base_url()?>resources/img/favicon.png"/>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -17,16 +18,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="container" id="login-page">
                 <div class="panel panel-primary col-6 col-center" style="height: auto">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-sign-in"></i> Reset Go4Slam app password</h3>
+                        <h3 class="panel-title"><i class="fa fa-sign-in"></i> Reset password</h3>
                     </div>
                     <div class="panel-body">
                         <?php if (!isset($success)) : ?>
-                        <div class="box-header with-border">
-                            <p class="box-title">Please set your new password below.</p>
-                        </div>
+                            <div class="box-header with-border">
+                                <p class="box-title">Please set your new password below.</p>
+                            </div>
                         <?php endif; ?>
                         <?php if (isset($error) && strlen($error) > 0): ?>
                             <div class="alert alert-danger" role="alert"><?= $error ?></div>
+                        <?php endif ?>
+                        <?php if (isset($run_error) && strlen($run_error) > 0): ?>
+                            <div class="alert alert-danger" role="alert"><?= $run_error ?></div>
                         <?php endif ?>
                         <?php if (isset($success)) : ?>
                             <div class="alert alert-success" role="alert">Your password has successfully saved.</div>

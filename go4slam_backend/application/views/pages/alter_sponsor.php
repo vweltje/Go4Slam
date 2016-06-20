@@ -13,7 +13,7 @@
             <?= form_open_multipart() ?>
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" name="name" placeholder="First name" value="<?= set_value('first_name', isset($sponsor) ? $sponsor['name'] : ''); ?>">
+                <input type="text" class="form-control" name="name" placeholder="First name" maxlength="255" value="<?= set_value('first_name', isset($sponsor) ? $sponsor['name'] : ''); ?>">
             </div>
             <div class="form-group">
                 <label for="image">Logo</label>

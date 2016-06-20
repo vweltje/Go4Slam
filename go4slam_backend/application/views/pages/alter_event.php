@@ -13,11 +13,11 @@
             <?= form_open_multipart() ?>
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" name="title" placeholder="Title" value="<?= set_value('first_name', isset($event) ? $event['title'] : ''); ?>">
+                <input type="text" class="form-control" name="title" placeholder="Title" maxlength="255" value="<?= set_value('first_name', isset($event) ? $event['title'] : ''); ?>">
             </div>
             <div class="form-group">
                 <label for="short_description">Short description</label>
-                <textarea class="form-control" name="short_description" placeholder="Short description"><?= set_value('image', isset($event) ? $event['short_description'] : ''); ?></textarea>
+                <textarea class="form-control" name="short_description" placeholder="Short description" maxlength="255"><?= set_value('image', isset($event) ? $event['short_description'] : ''); ?></textarea>
             </div>
             <div class="form-group">
                 <label for="short_description">Start date</label>

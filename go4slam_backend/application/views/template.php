@@ -4,7 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Go4slam admin pannel</title>
+    <title>GO4SLAM | admin pannel</title>
+    <link rel="shortcut icon" type="image/png" href="<?=base_url()?>resources/img/favicon.png"/>
     
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">

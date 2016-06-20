@@ -14,4 +14,11 @@ class Events_model extends MY_Model {
 
         parent::__construct();
     }
+    
+//    public function get_events($start, $end) {
+//        $this->db->select('*')
+//                ->where(array('start_date' => $start, 'end_date' => $end))
+//                ->get('events');
+//        return;
+//    }
 }
