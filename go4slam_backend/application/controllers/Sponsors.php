@@ -36,22 +36,22 @@ class Sponsors extends MY_Controller {
 
             if ($_FILES['userfile']['name']) {
                 $image = do_image_upload(config_item('src_path_sponsor_images'), 10000, 250);
-
+                
                 if (isset($image['error'])) {
                     return $this->load_view('pages/alter_sponsor', $image);
                 }
 
                 $insert['image'] = $image[0];
             }
-
+            
             if (!$sponsor_id) {
                 $this->sponsors_model->insert($insert);
             } 
             else {
+                $old_image = $this->sponsors_model->fields('image')->get($sponsor_id)['image'];
+                
                 if ($this->sponsors_model->update($insert, $sponsor_id)) {
-                    $image = $this->sponsors_model->fields('image')->get($sponsor_id)['image'];
-
-                    unlink(config_item('src_path_sponsor_images').$image);
+                    unlink(config_item('src_path_sponsor_images').$old_image);
                 }
             }
             
