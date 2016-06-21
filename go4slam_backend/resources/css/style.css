@@ -53,10 +53,30 @@ body .panel.panel-default .panel-heading .fa-plus {
   cursor: pointer;
 }
 body .panel.panel-small {
-  width: calc(50% - 20px);
+  width: calc(50% - 10px);
   float: left;
 }
 body .panel.panel-small:nth-child(odd) {
+  margin-right: 20px;
+}
+body .thumbnail-small {
+  width: calc(50% - 10px);
+  float: left;
+}
+body .thumbnail-small:nth-child(odd) {
+  margin-right: 20px;
+}
+body .well:after {
+  content: " ";
+  display: block;
+  height: 0;
+  clear: both;
+}
+body .form-group.form-group-small {
+  width: calc(50% - 10px);
+  float: left;
+}
+body .form-group.form-group-small:nth-child(odd) {
   margin-right: 20px;
 }
 body .btn-primary {
@@ -119,7 +139,7 @@ body main #links a i {
   position: absolute;
   padding: 10px;
   color: black;
-  text-shadow: 2px 2px 2px rgba(255, 255, 255, 0.3);
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
   z-index: 1;
   opacity: 0;
 }

@@ -28,6 +28,7 @@ class Api extends CI_Controller {
      * Check if request is valid. 
      */
     private function check_api_key() {
+        return true;
         $post_token = $this->input->post('App-Request-Token');
         $post_datetime = $this->input->post('App-Request-Timestamp');
         if ($post_token && $post_datetime) {
@@ -110,21 +111,15 @@ class Api extends CI_Controller {
         $email = $this->input->post('email');
         $pass = $this->input->post('password');
         if (!empty($email) && !empty($pass)) {
-            $user = $this->ion_auth_model->login($email, $pass);
-            if ($user && $this->ion_auth->in_group(array('admin', 'general'))) {
-                $key = $this->users_model->set_privatekey(true);
-                if (!$key) {
-                    $this->ion_auth->logout();
-                    return $this->send_error('ERROR');
-                }
-                $this->event_log();
-                return $this->send_response(array(
-                            'privatekey' => $key,
-                            'user_id' => $this->ion_auth->user()->row()->id
-                ));
-            } else {
-                $this->ion_auth->logout();
+            $user = $this->users_model->login($email, $pass);
+            if (!$user) {
+                return $this->send_error('ERROR');
             }
+            $this->event_log();
+            return $this->send_response(array(
+                        'privatekey' => $user->privatekey,
+                        'user_id' => $user->id
+            ));
         }
         return $this->send_error('LOGIN_FAIL');
     }
@@ -232,9 +227,10 @@ class Api extends CI_Controller {
     public function get_user_details() {
         $user_id = intval($this->input->post('user_id'));
         if (!$user_id) {
-            return $this->send_error('INVALID INPUT');
+            return $this->send_error('INVALID_INPUT');
         }
         $fields = array(
+            'id',
             'first_name',
             'prefix',
             'last_name',
@@ -245,6 +241,8 @@ class Api extends CI_Controller {
             'nationale_ranking_double'
         );
         if ($details = $this->users_model->fields($fields)->get($user_id)) {
+            $this->load->model('blog_posts_model');
+            $details['blog_posts'] = $this->blog_posts_model->order_by('created_at', 'desc')->get_all(array('user_id' => $user_id));
             $this->event_log();
             $this->send_response($details);
         } else {
@@ -278,16 +276,14 @@ class Api extends CI_Controller {
         $profile_pic = do_image_upload(config_item('src_path_profile_pictures'), 10000, 500, 'cover_image');
         if ($cover_pic) {
             if (isset($cover_pic['error'])) {
-                $data['error'] = $cover_pic['error'];
-                return $this->load_view('pages/alter_newsletter', $data);
+                return $this->send_error($cover_pic['error']);
             }
             $update_data['cover_image'] = $cover_pic[0];
             $update_data['image'] = $cover_pic[0];
         }
         if ($profile_pic) {
             if (isset($profile_pic['error'])) {
-                $data['error'] = $profile_pic['error'];
-                return $this->load_view('pages/alter_newsletter', $data);
+                return $this->send_error($profile_pic['error']);
             }
             $update_data['cover_image'] = $profile_pic[0];
             $update_data['image'] = $profile_pic[0];

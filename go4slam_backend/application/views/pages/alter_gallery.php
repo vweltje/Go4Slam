@@ -30,7 +30,7 @@
 
             <div id="links">
                 <?php
-                if (isset($gallery)) :
+                if (isset($gallery) && count($gallery['items']) > 0) :
                     foreach ($gallery['items'] as $item) :
                         ?>
                         <a class="thumbnail" href="<?= site_url(config_item('src_path_gallery_images') . $item['src']) ?>" title="<?= $item['src'] ?>" data-gallery>

@@ -41,10 +41,15 @@ $(function () {
     });
 });
 
-function preview_image() {
+function preview_image(el) {
     var reader = new FileReader();
-    reader.readAsDataURL(document.getElementById('upload-img').files[0]);
+    reader.readAsDataURL((typeof el !== 'undefined' ? el : document.getElementById('upload-img')).files[0]);
     reader.onload = function (e) {
+        if (typeof el !== 'undefined') {
+            console.log($(el).parent().index());
+            $('.thumbnail:nth-child(' + ($(el).parent().index()+1) + ')').find('img').attr('src', e.target.result);
+            return;
+        }
         document.getElementById('preview-img').src = e.target.result;
     };
 }

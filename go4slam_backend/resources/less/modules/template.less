@@ -8,7 +8,7 @@ body {
                 border-color: @orange;
             }
         }
-        
+
         &.panel-default {
             .panel-heading {
                 .fa-plus {
@@ -17,17 +17,44 @@ body {
                 }
             }
         }
-        
+
         &.panel-small {
-            width: calc(~'50% - 20px');
+            width: calc(~'50% - 10px');
             float: left;
-            
+
             &:nth-child(odd) {
                 margin-right: 20px;
             }
         }
     }
-    
+
+    .thumbnail-small {
+        width: calc(~'50% - 10px');
+        float: left;
+
+        &:nth-child(odd) {
+            margin-right: 20px;
+        }
+    }
+
+    .well:after { 
+        content: " ";
+        display: block; 
+        height: 0; 
+        clear: both;
+    }
+
+    .form-group {
+        &.form-group-small {
+            width: calc(~'50% - 10px');
+            float: left;
+
+            &:nth-child(odd) {
+                margin-right: 20px;
+            }
+        }
+    }
+
     .btn-primary {
         background-color: @orange;
         border: none;
@@ -37,67 +64,67 @@ body {
             color: white!important;
         }
     }
-    
+
     a {
         color: @orange;
-        
+
         &:hover, &:active {
             color: @dark-orange;
         }
     }
-    
+
     .container {
         max-width: 1000px;
     }
-    
+
     main {
         margin-top: 30px;
-        
+
         .datatable tbody tr td {
             &:last-of-type {
                 i {
                     padding: 0px 5px;
                 }
             }
-            
+
             &.manage > i{
                 cursor: pointer;
             }
         }
-        
+
         small {
             font-size: 10px;
-            
+
             &:before {
                 content: '(';
             }
-            
+
             &:after {
                 content: ')';
             }
         }
-        
+
         .alert > p {
             display: inline;
         }
-        
+
         #preview-img {
             width: auto;
             max-height: 270px;
         }
-        
+
         #links {
             margin-top: 20px;
-            
+
             a {
                 display: inline-block;
                 float: left;
                 margin-right: 5px;
-                
+
                 &:hover > i {
                     opacity: 1;
                 }
-                
+
                 i {
                     position: absolute;
                     padding: 10px;
