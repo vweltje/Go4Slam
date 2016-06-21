@@ -1,12 +1,13 @@
 <?php
 
-function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250, $file_name = false) {
+function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250, $file_name = 'userfile') {
     $ci = & get_instance();
     $ci->load->helper('string');
     $ci->load->library('upload');
     $ci->load->library('image_lib');
     $file_name = ($file_name ? $file_name : 'userfile');
     $names = array();
+    $new_key_names = array();
     $upload_conf = array(
         'upload_path' => $path,
         'max_size' => $max_filesize, // 1000 = 1MB
@@ -20,15 +21,22 @@ function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250, 
         if (is_object($val) || is_array($val)) {
             foreach ($val as $v) {
                 $field_name = "file_" . $i;
+                if (!isset($_FILES[$field_name])) {
+                    $new_key_names[] = 'file_' . $i;
+                }
                 $_FILES[$field_name][$key] = $v;
                 $i++;
             }
         } else {
-            $_FILES['file_'.$i] = $_FILES[$file_name];
+            if (!isset($_FILES['file_' . $i])) {
+                $new_key_names[] = 'file_' . $i;
+            }
+            $_FILES['file_' . $i] = $_FILES[$file_name];
         }
     }
     unset($_FILES[$file_name]);
-    foreach ($_FILES as $img_name => $img_data) {
+    foreach ($new_key_names as $img_name) {
+        $img_data = $_FILES[$img_name];
         $img_info = pathinfo($_FILES[$img_name]['name']);
         if (isset($img_info['extension'])) {
             $img_ext = $img_info['extension'];
@@ -39,6 +47,7 @@ function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250, 
             $upload_conf['file_name'] = $new_name;
             $ci->upload->initialize($upload_conf);
             if ($ci->upload->do_upload($img_name)) {
+                unset($_FILES[$img_name]);
                 $img = $ci->upload->data();
                 if ($img['image_width'] < $target_size || $img['image_height'] < $target_size) {
                     unlink($upload_conf['upload_path'] . $img['file_name']);

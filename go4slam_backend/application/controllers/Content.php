@@ -93,7 +93,7 @@ class Content extends MY_Controller {
                 'description' => $this->input->post('description')
             );
             $this->load->helper('image_upload_helper');
-            $images = do_image_upload(config_item('src_path_gallery_images'), 10000, 500);
+            $images = do_image_upload(config_item('src_path_gallery_images'), 10000, 400);
             if (isset($images['error'])) {
                 $data['error'] = $images['error'];
                 return $this->load_view('pages/alter_newsletter', $data);

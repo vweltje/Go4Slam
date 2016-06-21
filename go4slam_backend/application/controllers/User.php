@@ -75,65 +75,80 @@ class User extends MY_Controller {
 
     public function add_or_edit_user($type = false, $user_id = false) {
         $data = array();
-
         $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email')
                 ->set_rules('password', 'password', 'trim' . ($user_id ? '' : '|required') . '|matches[passconf]|min_length[8]')
                 ->set_rules('passconf', 'password confirmation', 'trim' . ($user_id ? '' : '|required') . '')
                 ->set_rules('first_name', 'first name', 'trim|required')
                 ->set_rules('prefix', 'prefix name', 'trim')
-                ->set_rules('last_name', 'last name', 'trim|required');
-
+                ->set_rules('last_name', 'last name', 'trim|required')
+                ->set_rules('image', 'profile picture')
+                ->set_rules('cover_image', 'corver picture')
+                ->set_rules('wta_ranking_double', 'wta ranking double', 'trim|required')
+                ->set_rules('nationale_ranking_single', 'nationale ranking single', 'trim|required')
+                ->set_rules('nationale_ranking_double', 'nationale ranking double', 'trim|required');
         if ($user_id) {
-            $fields = array('first_name', 'prefix', 'last_name', 'email');
+            $fields = array(
+                'email',
+                'first_name',
+                'prefix',
+                'last_name',
+                'image',
+                'cover_image',
+                'wta_ranking_double',
+                'nationale_ranking_single',
+                'nationale_ranking_double'
+            );
             $data['user'] = $this->users_model->fields($fields)->get($user_id);
         }
-
         if ($this->form_validation->run()) {
-            $data = $this->input->post();
-
-            $data['first_name'] = ucfirst($data['first_name']);
-            $data['prefix'] = ucfirst($data['prefix']);
-            $data['last_name'] = ucfirst($data['last_name']);
-
-            unset($data['passconf']);
-
-            if (!$user_id || $user_id === 0) {
-
-                $email = $this->input->post('email');
-
-                unset($data['email']);
-                unset($data['password']);
-
-                if (!$user_id) {
-                    $groups = array('2');
-
-                    if ($type === 'cms')
-                        $groups = array('1');
-
-                    $success = $this->ion_auth_model->register($email, $this->input->post('password'), $email, $data, $groups);
+            $insert_data = $this->input->post();
+            $insert_data['first_name'] = ucfirst($insert_data['first_name']);
+            $insert_data['prefix'] = ucfirst($insert_data['prefix']);
+            $insert_data['last_name'] = ucfirst($insert_data['last_name']);
+            $this->load->helper('image_upload_helper');
+            $profile_pic = do_image_upload(config_item('src_path_profile_pictures'), 10000, 400, 'image');
+            $cover_pic = do_image_upload(config_item('src_path_cover_images'), 10000, 400, 'cover_image');
+            if ($cover_pic) {
+                if (isset($cover_pic['error'])) {
+                    $data['error'] = $cover_pic['error'];
+                    return $this->load_view('pages/alter_user', $data);
                 }
+                $insert_data['cover_image'] = $cover_pic[0];
+            }
+            if ($profile_pic) {
+                if (isset($profile_pic['error'])) {
+                    $data['error'] = $profile_pic['error'];
+                    return $this->load_view('pages/alter_user', $data);
+                }
+                $insert_data['image'] = $profile_pic[0];
+            }
+            unset($insert_data['passconf']);
+            if (!$user_id || $user_id === 0) {
+                $email = $insert_data['email'];
+                unset($insert_data['email']);
+                unset($insert_data['password']);
+                $groups = array('2');
+                if ($type === 'cms') {
+                    $groups = array('1');
+                }
+                $success = $this->ion_auth_model->register($email, $this->input->post('password'), $email, $insert_data, $groups);
             }
             else {
-                if (!$data['password'])
-                    unset($data['password']);
-
-                $success = $this->ion_auth_model->update($user_id, $data);
+                if (!$insert_data['password']) {
+                    unset($insert_data['password']);
+                }
+                $success = $this->ion_auth_model->update($user_id, $insert_data);
             }
-
             if (isset($success) && $success) {
                 $this->session->set_flashdata('message', 'User is successfully saved.');
-
                 redirect($type . '_users');
             }
-
             $data['error'] = 'Invalid input, please try it again.';
         }
-
-        if (validation_errors())
+        if (validation_errors()) {
             $data['error'] = validation_errors();
-
+        }
         $data['type'] = $type;
-
         $this->load_view('pages/alter_user', $data);
     }
 

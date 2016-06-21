@@ -35,7 +35,7 @@ class Sponsors extends MY_Controller {
             );
 
             if ($_FILES['userfile']['name']) {
-                $image = do_image_upload(config_item('src_path_sponsor_images'), 10000, 250);
+                $image = do_image_upload(config_item('src_path_sponsor_images'), 10000, 350);
                 
                 if (isset($image['error'])) {
                     return $this->load_view('pages/alter_sponsor', $image);

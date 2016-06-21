@@ -10,7 +10,7 @@
                     <?= $error ?>
                 </div>
             <?php endif; ?>
-            <?= form_open() ?>
+            <?= form_open_multipart() ?>
             <div class="form-group">
                 <label for="name">First name</label>
                 <input type="text" class="form-control" name="first_name" placeholder="First name" maxlength="100" value="<?= set_value('first_name', isset($user) ? $user['first_name'] : ''); ?>">
@@ -34,6 +34,40 @@
             <div class="form-group">
                 <label for="name">Password confirmation</label>
                 <input type="password" class="form-control" name="passconf" placeholder="Password confirmation" maxlength="100" value="<?= set_value('passconf'); ?>">
+            </div>
+            <label>Ranking</label>
+            <div class="well">
+                <div class="form-group">
+                    <label for="name">WTA double</label>
+                    <input type="number" class="form-control" name="wta_ranking_double" placeholder="WTA ranking double" maxlength="11" value="<?= set_value('wta_ranking_double', isset($user) ? $user['wta_ranking_double'] : ''); ?>">
+                </div>
+                <div class="form-group">
+                    <label for="name">Nationale single</label>
+                    <input type="number" class="form-control" name="nationale_ranking_single" placeholder="Nationale ranking single" maxlength="11" value="<?= set_value('nationale_ranking_single', isset($user) ? $user['nationale_ranking_single'] : ''); ?>">
+                </div>
+                <div class="form-group">
+                    <label for="name">Nationale double</label>
+                    <input type="number" class="form-control" name="nationale_ranking_double" placeholder="Nationale ranking double" maxlength="11" value="<?= set_value('nationale_ranking_double', isset($user) ? $user['nationale_ranking_double'] : ''); ?>">
+                </div>
+            </div>
+            <label>Pictures</label>
+            <div class="well">
+                <div class="form-group form-group-small">
+                    <label for="name">Profile</label>
+                    <input class="upload-img" onchange="preview_image(this);" type="file" class="form-control" name="image" placeholder="Profile picture">
+                </div>
+                <div class="form-group form-group-small">
+                    <label for="name">Cover</label>
+                    <input class="upload-img" onchange="preview_image(this);" type="file" class="form-control" name="cover_image" placeholder="Cover picture">
+                </div>
+                <div id="links" style="margin-top: 80px;">
+                    <a class="thumbnail thumbnail-small" style="display: block;" href="<?= isset($user['image']) ? base_url(config_item('src_path_profile_pictures') . $user['image']) : '' ?>" title="<?= isset($user['image']) ? $user['image'] : '' ?>" data-gallery>
+                        <img src="<?= isset($user['image']) ? base_url(config_item('src_path_profile_pictures') . $user['image']) : '' ?>">
+                    </a>
+                    <a class="thumbnail thumbnail-small" style="display: block;" href="<?= isset($user['cover_image']) ? base_url(config_item('src_path_cover_images') . $user['cover_image']) : '' ?>" title="<?= isset($user['cover_image']) ? $user['cover_image'] : '' ?>" data-gallery>
+                        <img src="<?= isset($user['cover_image']) ? base_url(config_item('src_path_cover_images') . $user['cover_image']) : '' ?>">
+                    </a>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> <?= isset($user) ? 'Save' : 'Create' ?></button>
             <?= form_close() ?>
