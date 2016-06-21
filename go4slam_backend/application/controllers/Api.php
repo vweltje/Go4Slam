@@ -379,6 +379,11 @@ class Api extends CI_Controller {
         if ($start && $end) {
             $this->load->model('events_model');
             if ($events = $this->events_model->get_all(array('start_date >=' => $start, 'end_date <=' => $end))) {
+                setlocale(LC_TIME, 'nl_NL.UTF-8');
+                foreach ($events as &$event) {
+                    $event['readable_start_date'] = strftime('%A %d %B %G', strtotime($event['start_date']));
+                    $event['readable_end_date'] = strftime('%A %d %B %G', strtotime($event['end_date']));
+                }
                 $this->event_log();
                 return $this->send_response($events);
             }
