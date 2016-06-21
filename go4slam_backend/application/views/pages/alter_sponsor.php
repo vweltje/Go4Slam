@@ -1,7 +1,7 @@
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-pie-chart"></i> <?= isset($sponsor) ? 'Alter' : 'Add' ?> sponsor</h3>
+            <h3 class="panel-title"><i class="fa fa-money" aria-hidden="true"></i> <?= isset($sponsor) ? 'Alter' : 'Add' ?> sponsor</h3>
         </div>
         <div class="panel-body">
             <?php if (isset($error) && $error) : ?>

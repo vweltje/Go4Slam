@@ -1,7 +1,7 @@
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-pie-chart"></i> <?= isset($event) ? 'Alter' : 'Add' ?> newsletter</h3>
+            <h3 class="panel-title"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> <?= isset($event) ? 'Alter' : 'Add' ?> event</h3>
         </div>
         <div class="panel-body">
             <?php if (isset($error) && $error) : ?>
