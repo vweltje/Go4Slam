@@ -132,8 +132,7 @@ class User extends MY_Controller {
                     $groups = array('1');
                 }
                 $success = $this->ion_auth_model->register($email, $this->input->post('password'), $email, $insert_data, $groups);
-            }
-            else {
+            } else {
                 if (!$insert_data['password']) {
                     unset($insert_data['password']);
                 }
@@ -227,6 +226,44 @@ class User extends MY_Controller {
             $data['error'] = 'Invalid input';
         }
         $this->load->view('reset_password', $data);
+    }
+
+    public function settings() {
+        $data = array();
+
+        $this->form_validation->set_rules('password', 'current password', 'trim|required')
+                ->set_rules('new_pass', 'new password', 'trim|required|matches[conf_pass]')
+                ->set_rules('conf_pass', 'confirmation password', 'trim|required');
+
+        if ($this->form_validation->run()) {
+            $password = $this->input->post('password');
+            $new_pass = $this->input->post('new_pass');
+            $conf_pass = $this->input->post('conf_pass');
+            if ($new_pass === $conf_pass) {
+                $email = $this->ion_auth->user()->row()->email;
+                $user = $this->users_model->login($email, $password);
+                if ($user) {
+                    if ($this->users_model->change_password($email, $new_pass, $user->password)) {
+                        $this->session->set_flashdata('message', 'Your settings have been successfully saved.');
+                        redirect('analytics');
+                    } else {
+                        $data['error'] = 'ERROR!';
+                    }
+                } else {
+                    $data['error'] = 'Current password seems to be incorect.';
+                }
+                $update['salt'] = $this->ion_auth_model->salt();
+                $update['password'] = $this->ion_auth_model->hash_password($new_pass, $update['salt']);
+            } else {
+                $data['error'] = 'The new password field does not match the confimation field.';
+            }
+        }
+
+        if (validation_errors()) {
+            $data['error'] = validations_errors();
+        }
+
+        $this->load_view('pages/settings', $data);
     }
 
 }

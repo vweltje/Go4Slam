@@ -14,12 +14,12 @@ class Users_model extends MY_Model {
 
         parent::__construct();
     }
-    
-    public function login($email, $password){
+
+    public function login($email, $password) {
 
         $this->load->model('Ion_auth_model');
 
-        if(empty($email) || empty($password)){
+        if (empty($email) || empty($password)) {
             return FALSE;
         }
 
@@ -29,30 +29,30 @@ class Users_model extends MY_Model {
                 ->order_by('id', 'desc')
                 ->get('users');
 
-        if($query->num_rows() === 1){
+        if ($query->num_rows() === 1) {
             $user = $query->row();
             $salt = $this->Ion_auth_model->salt();
-            $privatekey = $this->Ion_auth_model->hash_password($email.$password.uniqid(), $salt);
+            $privatekey = $this->Ion_auth_model->hash_password($email . $password . uniqid(), $salt);
             $password = $this->hash_password_db($user->id, $password);
 
-            if($password === TRUE){
-                if($this->db->where('id', $user->id)->update('users', array('privatekey' => $privatekey))) {
+            if ($password === TRUE) {
+                if ($this->db->where('id', $user->id)->update('users', array('privatekey' => $privatekey))) {
                     $user->privatekey = $privatekey;
                     return $user;
-                } else{
+                } else {
                     return false;
                 }
             }
         }
-        
+
         // Just to take up time.
         sleep(1);
 
         return FALSE;
     }
 
-    private function hash_password_db($id, $password){
-        if(empty($id) || empty($password)){
+    private function hash_password_db($id, $password) {
+        if (empty($id) || empty($password)) {
             return FALSE;
         }
 
@@ -64,11 +64,11 @@ class Users_model extends MY_Model {
 
         $hash_password_db = $query->row();
 
-        if($query->num_rows() !== 1){
+        if ($query->num_rows() !== 1) {
             return FALSE;
         }
-        
-        if($this->Ion_auth_model->hash_password($password, $hash_password_db->salt) === $hash_password_db->password){
+
+        if ($this->Ion_auth_model->hash_password($password, $hash_password_db->salt) === $hash_password_db->password) {
             return TRUE;
         }
 
@@ -101,4 +101,15 @@ class Users_model extends MY_Model {
         }
         return true;
     }
+
+    public function change_password($email, $new_pass, $current_pass_hash) {
+        $this->load->model('Ion_auth_model');
+        $data = array(
+            'salt' => $this->Ion_auth_model->salt()
+        );
+        $data['password'] = $this->Ion_auth_model->hash_password($new_pass, $data['salt']);
+        return $this->db->where(array('email' => $email, 'password' => $current_pass_hash))
+                        ->update('users', $data);
+    }
+
 }

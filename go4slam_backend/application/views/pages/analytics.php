@@ -12,7 +12,13 @@
             <li role="presentation"><a href="<?= site_url('analytics?sort_results_by=all') ?>">All time</a></li>
         </ul>
         <div class="panel-body">
-            <h3>Total actions <?= $this->session->userdata('sort_results_by') !== 'all' ? 'per '. $this->session->userdata('sort_results_by') : '' ?></h3><br/>
+            <?php if ($this->session->flashdata('message')) : ?>
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <?= $this->session->flashdata('message') ?>
+                </div>
+            <?php endif; ?>
+            <h3>Total actions <?= $this->session->userdata('sort_results_by') !== 'all' ? 'per ' . $this->session->userdata('sort_results_by') : '' ?></h3><br/>
             <div class="row">
                 <?php
                 if (isset($logging_types) && count($logging_types) > 0) :
