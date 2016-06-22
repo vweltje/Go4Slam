@@ -376,9 +376,17 @@ class Api extends CI_Controller {
     public function get_calendar() {
         $start = date('Y-m-d H:i:s', strtotime($this->input->post('start_date')));
         $end = date('Y-m-d H:i:s', strtotime($this->input->post('end_date')));
+        $filter = $this->input->post('filter');
         if ($start && $end) {
+            if (isset($filter) && !empty($filter) && !in_array($filter, config_item('event_types'))) {
+                return $this->send_error('INVALID_FILTER');
+            }
             $this->load->model('events_model');
-            if ($events = $this->events_model->get_all(array('start_date >=' => $start, 'end_date <=' => $end))) {
+            $where = array('start_date >=' => $start, 'end_date <=' => $end);
+            if (isset($filter) && !empty($filter)) {
+                $where['type'] = $filter;
+            }
+            if ($events = $this->events_model->get_all($where)) {
                 setlocale(LC_TIME, 'nl_NL.UTF-8');
                 foreach ($events as &$event) {
                     $event['readable_start_date'] = strftime('%A %d %B %G', strtotime($event['start_date']));
@@ -387,6 +395,7 @@ class Api extends CI_Controller {
                 $this->event_log();
                 return $this->send_response($events);
             }
+            return $this->send_error('NO_RESULTS');
         } else {
             return $this->send_error('ERROR');
         }

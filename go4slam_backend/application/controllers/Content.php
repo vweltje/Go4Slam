@@ -18,11 +18,11 @@ class Content extends MY_Controller {
         $data['galleries'] = $this->galleries_model->order_by('created_at', 'desc')->get_all();
         $data['scores'] = $this->scores_model->order_by('created_at', 'desc')->get_all();
         $data['events'] = $this->events_model->order_by('created_at', 'desc')->get_all();
-        
+
         foreach ($data['events'] as &$event) {
             $event['start_date'] = date('d-m-Y H:i:s', strtotime($event['start_date']));
         }
-        
+
         $this->load_view('pages/content_items_overview', $data);
     }
 
@@ -33,7 +33,7 @@ class Content extends MY_Controller {
                 ->set_rules('short_description', 'short_description', 'trim|required')
                 ->set_rules('newsletter', 'newsletter');
         if ($news_item_id) {
-            $data['newsletter'] = $this->news_items_model->fields(array('title', 'number'. 'short_description', 'pdf'))->get($news_item_id);
+            $data['newsletter'] = $this->news_items_model->fields(array('title', 'number' . 'short_description', 'pdf'))->get($news_item_id);
         }
         if ($this->form_validation->run()) {
             $insert = array(
@@ -120,10 +120,10 @@ class Content extends MY_Controller {
         }
         $this->load_view('pages/alter_gallery', $data);
     }
-    
+
     public function ajax_delete_gallery_image($image_id = false) {
         $data['success'] = false;
-        if($image_id) {
+        if ($image_id) {
             $this->gallery_items_model->delete($image_id);
             $data['success'] = true;
         }
@@ -203,25 +203,36 @@ class Content extends MY_Controller {
         $this->session->set_flashdata('message', 'Score successfully deleted.');
         redirect($this->agent->referrer());
     }
-    
+
     public function add_or_edit_event($event_id = false) {
-        $data = array();
+        $data = array(
+            'types' => config_item('event_types')
+        );
         $this->form_validation->set_rules('title', 'title', 'trim|required')
                 ->set_rules('short_description', 'short_description', 'trim|required')
                 ->set_rules('start_date', 'start date', 'required')
-                ->set_rules('end_date', 'end date', 'required');
+                ->set_rules('type', 'type', 'required')
+                ->set_rules('end_date', 'end date', 'required')
+                ->set_rules('image', 'Image');
         if ($event_id) {
-            $data['event'] = $this->events_model->fields(array('title', 'short_description', 'start_date', 'end_date'))->get($event_id);
+            $data['event'] = $this->events_model->fields(array('title', 'type', 'short_description', 'start_date', 'end_date', 'image'))->get($event_id);
             $data['event']['start_date'] = date('d-m-Y H:i:s', strtotime($data['event']['start_date']));
             $data['event']['end_date'] = date('d-m-Y H:i:s', strtotime($data['event']['end_date']));
         }
         if ($this->form_validation->run()) {
             $insert = array(
+                'type' => $this->input->post('type'),
                 'title' => ucfirst($this->input->post('title')),
                 'short_description' => $this->input->post('short_description'),
                 'start_date' => date('Y-m-d H:i:s', strtotime($this->input->post('start_date'))),
                 'end_date' => date('Y-m-d H:i:s', strtotime($this->input->post('end_date')))
             );
+            $this->load->helper('image_upload');
+            $image = do_image_upload(config_item('src_path_event_images'), 10000, 250);
+            if (isset($image['error'])) {
+                return $this->load_view('pages/alter_event', $image);
+            }
+            $insert['image'] = $image[0];
             if (!$event_id) {
                 $id = $this->events_model->insert($insert);
             } else {
@@ -246,4 +257,5 @@ class Content extends MY_Controller {
         $this->session->set_flashdata('message', 'Event successfully deleted.');
         redirect($this->agent->referrer());
     }
+
 }

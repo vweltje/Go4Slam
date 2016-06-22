@@ -12,6 +12,18 @@
             <?php endif; ?>
             <?= form_open_multipart() ?>
             <div class="form-group">
+                <label for="type">Type</label><br>
+                <select name="type" class="form-control">
+                    <?php if (isset($types)) : ?>;
+                        <option <?= isset($event) ? '' : 'selected' ?> disabled value="">Select a type</option>
+                        <?php foreach ($types as $type) : ?>
+                        <option value="<?= $type ?>" <?= set_select('type', $type, isset($event['type']) ? true : false) ?>><?= ucfirst($type) ?></option>
+                        <?php endforeach;
+                    endif;
+                    ?>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" class="form-control" name="title" placeholder="Title" maxlength="255" value="<?= set_value('first_name', isset($event) ? $event['title'] : ''); ?>">
             </div>
@@ -26,6 +38,17 @@
             <div class="form-group">
                 <label for="short_description">End date</label>
                 <input type="text" class="form-control datetimepicker" name="end_date" value="<?= set_value('end_date', isset($event) ? $event['end_date'] : ''); ?>">
+            </div>
+            <div class="form-group">
+                <label for="upload-img">Image</label>
+                <input id="upload-img" onchange="preview_image();" type="file" class="form-control" name="userfile" placeholder="Logo" value="<?= set_value('image', isset($score) ? $score['image'] : ''); ?>">
+            </div>
+            <div class="form-group">
+                <div id="links">
+                    <a class="thumbnail" style="display: block; float: none;" href="<?= isset($event['image']) && !empty($event['image']) ? base_url(config_item('src_path_event_images') . $event['image']) : '' ?>" title="<?= isset($event['image']) && !empty($event['image']) ? $event['image'] : '' ?>" data-gallery>
+                        <img class="thumbnail" id="preview-img" src="<?= isset($event['image']) && !empty($event['image']) ? base_url(config_item('src_path_event_images') . $event['image']) : '' ?>">
+                    </a>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
             <?= form_close() ?>

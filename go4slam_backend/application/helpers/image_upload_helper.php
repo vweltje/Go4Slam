@@ -16,6 +16,9 @@ function do_image_upload($path = '', $max_filesize = 10000, $target_size = 250, 
     if (empty($_FILES)) {
         return array('error' => 'No file to upload');
     }
+    if (!file_exists($upload_conf['upload_path'])) {
+        mkdir($upload_conf['upload_path'], 0777, true);
+    }
     foreach ($_FILES[$file_name] as $key => $val) {
         $i = 1;
         if (is_object($val) || is_array($val)) {

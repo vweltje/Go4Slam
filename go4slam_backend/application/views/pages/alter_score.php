@@ -38,7 +38,7 @@
                 <textarea class="form-control" name="description" placeholder="Description"><?= set_value('image', isset($score) ? $score['description'] : ''); ?></textarea>
             </div>
             <div class="form-group">
-                <label for="short_description">Image</label>
+                <label for="upload-img">Image</label>
                 <input id="upload-img" onchange="preview_image();" type="file" class="form-control" name="userfile" placeholder="Logo" value="<?= set_value('image', isset($score) ? $score['image'] : ''); ?>">
             </div>
             <div class="form-group">
