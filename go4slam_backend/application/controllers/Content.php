@@ -33,7 +33,7 @@ class Content extends MY_Controller {
                 ->set_rules('short_description', 'short_description', 'trim|required')
                 ->set_rules('newsletter', 'newsletter');
         if ($news_item_id) {
-            $data['newsletter'] = $this->news_items_model->fields(array('title', 'number' . 'short_description', 'pdf'))->get($news_item_id);
+            $data['newsletter'] = $this->news_items_model->fields(array('title', 'number', 'short_description', 'pdf'))->get($news_item_id);
         }
         if ($this->form_validation->run()) {
             $insert = array(
