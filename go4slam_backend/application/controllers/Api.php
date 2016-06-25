@@ -236,13 +236,12 @@ class Api extends CI_Controller {
             'last_name',
             'image',
             'cover_image',
-            'wta_ranking_double',
-            'nationale_ranking_single',
-            'nationale_ranking_double'
+            'ranking'
         );
         if ($details = $this->users_model->fields($fields)->get($user_id)) {
             $this->load->model('blog_posts_model');
             $details['blog_posts'] = $this->blog_posts_model->order_by('created_at', 'desc')->get_all(array('user_id' => $user_id));
+            $details['ranking'] = unserialize($details['ranking']);
             $this->event_log();
             $this->send_response($details);
         } else {
@@ -291,7 +290,28 @@ class Api extends CI_Controller {
         if (!$this->db->where('id', $this->user_id)->update('users', $update_data)) {
             return $this->send_error('ERROR');
         }
-        $this->event_log();
+        return $this->send_success();
+    }
+
+    public function edit_ranking() {
+        $this->check_auth();
+        $ranking = serialize(array(
+            '1' => array(
+                'name' => $this->input->post('ranking_1_name'),
+                'score' => intval($this->input->post('ranking_1_score'))
+            ),
+            '2' => array(
+                'name' => $this->input->post('ranking_2_name'),
+                'score' => intval($this->input->post('ranking_2_score'))
+            ),
+            '3' => array(
+                'name' => $this->input->post('ranking_3_name'),
+                'score' => intval($this->input->post('ranking_3_score'))
+            )
+        ));
+        if (!$this->db->where('id', $this->user_id)->update('users', array('ranking' => $ranking))) {
+            return $this->send_error('ERROR');
+        }
         return $this->send_success();
     }
 

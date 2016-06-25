@@ -80,47 +80,71 @@ class User extends MY_Controller {
                 ->set_rules('passconf', 'password confirmation', 'trim' . ($user_id ? '' : '|required') . '')
                 ->set_rules('first_name', 'first name', 'trim|required')
                 ->set_rules('prefix', 'prefix name', 'trim')
-                ->set_rules('last_name', 'last name', 'trim|required')
-                ->set_rules('image', 'profile picture')
-                ->set_rules('cover_image', 'corver picture')
-                ->set_rules('wta_ranking_double', 'wta ranking double', 'trim|required')
-                ->set_rules('nationale_ranking_single', 'nationale ranking single', 'trim|required')
-                ->set_rules('nationale_ranking_double', 'nationale ranking double', 'trim|required');
+                ->set_rules('last_name', 'last name', 'trim|required');
+        if ($type !== 'cms') {
+            $this->form_validation->set_rules('image', 'profile picture')
+                    ->set_rules('cover_image', 'corver picture')
+                    ->set_rules('ranking_1_name', 'ranking 1 name', 'trim')
+                    ->set_rules('ranking_1_score', 'ranking 1 score', 'trim')
+                    ->set_rules('ranking_2_name', 'ranking 2 name', 'trim')
+                    ->set_rules('ranking_2_score', 'ranking 2 score', 'trim')
+                    ->set_rules('ranking_3_name', 'ranking 3 name', 'trim')
+                    ->set_rules('ranking_3_score', 'ranking 3 score', 'trim');
+        }
         if ($user_id) {
             $fields = array(
                 'email',
                 'first_name',
                 'prefix',
-                'last_name',
-                'image',
-                'cover_image',
-                'wta_ranking_double',
-                'nationale_ranking_single',
-                'nationale_ranking_double'
+                'last_name'
             );
+            if ($type !== 'cms') {
+                $fields[] = 'image';
+                $fields[] = 'cover_image';
+                $fields[] = 'ranking';
+            }
             $data['user'] = $this->users_model->fields($fields)->get($user_id);
+            if ($type !== 'cms') {
+                $data['user']['ranking'] = unserialize($data['user']['ranking']);
+            }
         }
         if ($this->form_validation->run()) {
             $insert_data = $this->input->post();
             $insert_data['first_name'] = ucfirst($insert_data['first_name']);
             $insert_data['prefix'] = ucfirst($insert_data['prefix']);
             $insert_data['last_name'] = ucfirst($insert_data['last_name']);
-            $this->load->helper('image_upload_helper');
-            $profile_pic = do_image_upload(config_item('src_path_profile_pictures'), 10000, 400, 'image');
-            $cover_pic = do_image_upload(config_item('src_path_cover_images'), 10000, 400, 'cover_image');
-            if ($cover_pic) {
-                if (isset($cover_pic['error'])) {
-                    $data['error'] = $cover_pic['error'];
-                    return $this->load_view('pages/alter_user', $data);
+            if ($type !== 'cms') {
+                $insert_data['ranking'] = serialize(array(
+                    '1' => array(
+                        'name' => $this->input->post('ranking_1_name'),
+                        'score' => intval($this->input->post('ranking_1_score'))
+                    ),
+                    '2' => array(
+                        'name' => $this->input->post('ranking_2_name'),
+                        'score' => intval($this->input->post('ranking_2_score'))
+                    ),
+                    '3' => array(
+                        'name' => $this->input->post('ranking_3_name'),
+                        'score' => intval($this->input->post('ranking_3_score'))
+                    )
+                ));
+                $this->load->helper('image_upload_helper');
+                $profile_pic = do_image_upload(config_item('src_path_profile_pictures'), 10000, 400, 'image');
+                $cover_pic = do_image_upload(config_item('src_path_cover_images'), 10000, 400, 'cover_image');
+                if ($cover_pic) {
+                    if (isset($cover_pic['error'])) {
+                        $data['error'] = $cover_pic['error'];
+                        return $this->load_view('pages/alter_user', $data);
+                    }
+                    $insert_data['cover_image'] = $cover_pic[0];
                 }
-                $insert_data['cover_image'] = $cover_pic[0];
-            }
-            if ($profile_pic) {
-                if (isset($profile_pic['error'])) {
-                    $data['error'] = $profile_pic['error'];
-                    return $this->load_view('pages/alter_user', $data);
+                if ($profile_pic) {
+                    if (isset($profile_pic['error'])) {
+                        $data['error'] = $profile_pic['error'];
+                        return $this->load_view('pages/alter_user', $data);
+                    }
+                    $insert_data['image'] = $profile_pic[0];
                 }
-                $insert_data['image'] = $profile_pic[0];
             }
             unset($insert_data['passconf']);
             if (!$user_id || $user_id === 0) {

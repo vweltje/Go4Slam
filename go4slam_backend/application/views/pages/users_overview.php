@@ -31,7 +31,7 @@
                                     <?= $user['email'] ?>
                                 </td>
                                 <td class="manage">
-                                    <i title="edit" onclick="window.location.href = '<?= base_url('edit_cms_user/' . $user['id']) ?>'" class="fa fa-pencil"></i>
+                                    <i title="edit" onclick="window.location.href = '<?= base_url('edit_' . $type . '_user/' . $user['id']) ?>'" class="fa fa-pencil"></i>
                                     <i title="remove" data-link="<?= base_url('delete_user/' . $user['id']) ?>" class="fa fa-trash"></i>
                                 </td>
                             </tr>
