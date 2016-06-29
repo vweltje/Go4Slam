@@ -28,7 +28,6 @@ class Api extends CI_Controller {
      * Check if request is valid. 
      */
     private function check_api_key() {
-        return true;
         $post_token = $this->input->post('App-Request-Token');
         $post_datetime = $this->input->post('App-Request-Timestamp');
         if ($post_token && $post_datetime) {
@@ -344,9 +343,9 @@ class Api extends CI_Controller {
         $this->load->model('sponsors_model');
         $data = array();
         if ($view === 'default') {
-            $data['sponsors'] = $this->sponsors_model->fields(array('name', 'image', 'flashscreen'))->get_all();
+            $data['sponsors'] = $this->sponsors_model->fields(array('name', 'image'))->get_all();
         } else if ($view === 'flashscreen') {
-            $data['sponsors'] = $this->sponsors_model->fields(array('name', 'image', 'flashscreen'))->get_all(array('flashscreen' => 1));
+            $data['sponsors'] = $this->sponsors_model->fields(array('name', 'image'))->get_all(array('flashscreen' => 1));
         }
         if ($data['sponsors']) {
             shuffle($data['sponsors']);
