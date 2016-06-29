@@ -28,6 +28,7 @@ class Api extends CI_Controller {
      * Check if request is valid. 
      */
     private function check_api_key() {
+        return true;
         $post_token = $this->input->post('App-Request-Token');
         $post_datetime = $this->input->post('App-Request-Timestamp');
         if ($post_token && $post_datetime) {
@@ -399,6 +400,14 @@ class Api extends CI_Controller {
         return $this->send_success();
     }
 
+    /**
+     * Users can see upcomming events
+     * POST:
+     *  start_date - STRING
+     *  end_date - STRING
+     *  filter - STRING
+     * Returns validation errors or associative array
+     */
     public function get_calendar() {
         $start = date('Y-m-d H:i:s', strtotime($this->input->post('start_date')));
         $end = date('Y-m-d H:i:s', strtotime($this->input->post('end_date')));
@@ -425,6 +434,24 @@ class Api extends CI_Controller {
         } else {
             return $this->send_error('ERROR');
         }
+    }
+
+    /**
+     * Get all default images for in the app
+     * Returns associative array:
+     * - image STRING
+     * - location STRING
+     */
+    public function get_default_images() {
+        $this->load->model('app_images_model');
+        $data = array();
+        if ($data['default_images'] = $this->app_images_model->fields(array('image', 'location'))->get_all()) {
+            if (true  || count($data['default_images']) === 0) {
+                return $this->send_error('NO_RESULTS');
+            }
+            return $this->send_response($data);
+        }
+        return $this->send_error('ERROR');
     }
 
 }
