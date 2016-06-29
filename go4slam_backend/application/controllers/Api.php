@@ -340,9 +340,16 @@ class Api extends CI_Controller {
      * - image STRING
      * - name STRING
      */
-    public function get_sponsors() {
+    public function get_sponsors($view = 'default') {
         $this->load->model('sponsors_model');
-        if ($data['sponsors'] = $this->sponsors_model->fields(array('name', 'image'))->get_all()) {
+        $data = array();
+        if ($view === 'default') {
+            $data['sponsors'] = $this->sponsors_model->fields(array('name', 'image', 'flashscreen'))->get_all();
+        } else if ($view === 'flashscreen') {
+            $data['sponsors'] = $this->sponsors_model->fields(array('name', 'image', 'flashscreen'))->get_all(array('flashscreen' => 1));
+        }
+        if ($data['sponsors']) {
+            shuffle($data['sponsors']);
             return $this->send_response($data);
         }
         return $this->send_error('ERROR');

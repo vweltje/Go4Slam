@@ -21,10 +21,11 @@ class Sponsors extends MY_Controller {
         $data = array();
 
         $this->form_validation->set_rules('name', 'name', 'trim|required')
-                ->set_rules('userfile', 'image');
+                ->set_rules('userfile', 'image')
+                ->set_rules('flashscreen', 'flashscreen');
 
         if ($sponsor_id) 
-            $data['sponsor'] = $this->sponsors_model->fields(array('name', 'image'))->get($sponsor_id);
+            $data['sponsor'] = $this->sponsors_model->fields(array('name', 'image', 'flashscreen'))->get($sponsor_id);
 
         if ($this->form_validation->run()) {
             $this->load->model('sponsors_model');
@@ -33,6 +34,10 @@ class Sponsors extends MY_Controller {
             $insert = array(
                 'name' => ucwords($this->input->post('name'))
             );
+
+            if ($this->input->post('flashscreen') === 'true') {
+                $insert['flashscreen'] = 1;
+            }
 
             if ($_FILES['userfile']['name']) {
                 $image = do_image_upload(config_item('src_path_sponsor_images'), 10000, 350);
@@ -49,7 +54,7 @@ class Sponsors extends MY_Controller {
             } 
             else {
                 $old_image = $this->sponsors_model->fields('image')->get($sponsor_id)['image'];
-                
+
                 if ($this->sponsors_model->update($insert, $sponsor_id)) {
                     unlink(config_item('src_path_sponsor_images').$old_image);
                 }

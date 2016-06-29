@@ -19,6 +19,10 @@
                 <label for="image">Logo</label>
                 <input id="upload-img" onchange="preview_image();" type="file" class="form-control" name="userfile" placeholder="Logo" value="<?= set_value('image', isset($sponsor) ? $sponsor['image'] : ''); ?>">
             </div>
+            <div clas="form-froup">
+                <label for="flashscreen">Visible on flash screen</label>
+                <input type="checkbox" style="margin-left:5px;" name="flashscreen" value="true" <?= set_value('flashscreen', isset($sponsor) && $sponsor['flashscreen'] ? 'checked' : ''); ?>>
+            </div>
             <div class="form-group">
                 <div id="links">
                     <a class="thumbnail" style="display: block; float: none;" href="<?= isset($sponsor['image']) ? base_url(config_item('src_path_sponsor_images') . $sponsor['image']) : '' ?>" title="<?= isset($sponsor['image']) ? $sponsor['image'] : '' ?>" data-gallery>
