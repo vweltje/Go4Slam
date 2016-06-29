@@ -57,7 +57,10 @@ class User extends MY_Controller {
         $this->load->model('groups_model');
 
         $data['type'] = $type;
-        $user_ids = $this->groups_model->fields('id')->where('name', $type === 'cms' ? 'admin' : 'general')->with_users_groups('fields: user_id')->get_all()[0]['users_groups'];
+        $where = array(
+            'name' => ($type === 'cms' ? 'admin' : 'general')
+            );
+        $user_ids = $this->groups_model->fields('id')->where($where)->with_users_groups('fields: user_id')->get_all()[0]['users_groups'];
 
         if ($user_ids) {
 

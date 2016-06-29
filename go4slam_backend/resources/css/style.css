@@ -143,6 +143,25 @@ body main #links a i {
   z-index: 1;
   opacity: 0;
 }
+body main #scheduler input[type="checkbox"] {
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  border: none;
+  width: auto;
+  display: inline-block;
+  margin-left: 5px;
+  height: auto;
+}
+body main #scheduler h4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+body main #scheduler #scheduler-fields {
+  display: none;
+}
+body main #scheduler #scheduler-fields div:first-of-type {
+  margin-top: 15px;
+}
 header {
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }

@@ -39,6 +39,11 @@ $(function () {
     $('.datetimepicker').datetimepicker({
         format: 'Y-m-d H:i:s'
     });
+
+    if ($('#scheduler').length > 0) {
+        schedule_fields();
+        $('#scheduler input[type="checkbox"]').on('change', schedule_fields);
+    }
 });
 
 function preview_image(el) {
@@ -47,9 +52,17 @@ function preview_image(el) {
     reader.onload = function (e) {
         if (typeof el !== 'undefined') {
             console.log($(el).parent().index());
-            $('.thumbnail:nth-child(' + ($(el).parent().index()+1) + ')').find('img').attr('src', e.target.result);
+            $('.thumbnail:nth-child(' + ($(el).parent().index() + 1) + ')').find('img').attr('src', e.target.result);
             return;
         }
         document.getElementById('preview-img').src = e.target.result;
     };
+}
+
+function schedule_fields() {
+    if ($('#scheduler input[type="checkbox"]').is(':checked')) {
+        $('#scheduler #scheduler-fields').slideDown();
+    } else {
+        $('#scheduler #scheduler-fields').slideUp();
+    }
 }

@@ -25,7 +25,15 @@ class Timeline_model extends MY_Model {
         $this->load->model('galleries_model');
         $this->load->model('gallery_items_model');
         $this->load->model('scores_model');
-        foreach($timeline as &$item) {
+        foreach($timeline as $key => &$item) {
+            if ($item['publish_from'] !== '0000-00-00 00:00:00' && strtotime($item['publish_from']) > time()) {
+                unset($timeline[$key]);
+                continue;
+            } 
+            if ($item['publish_till'] !== '0000-00-00 00:00:00' && strtotime($item['publish_till']) < time()) {
+                unset($timeline[$key]);
+                continue;
+            }
             $type = $item['type'];
             switch ($item['type']) {
                 case 'blog_post' :

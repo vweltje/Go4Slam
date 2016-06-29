@@ -27,6 +27,7 @@
                 <label for="short_description">Newsletter</label>
                 <?= isset($newsletter) ? '<br><a target="_blank" href="' . base_url(config_item('src_path_newsletters') . $newsletter['pdf']) . '">' . $newsletter['pdf'] . '</a>' : '<input class="form-control" type="file" name="newsletter">' ?>
             </div>
+            <?php $this->load->view('pages/inc/scheduler.php', array('scheduled' => false, 'publish_from' => false, 'publish_till' => false)); ?>
             <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
             <?= form_close() ?>
         </div>

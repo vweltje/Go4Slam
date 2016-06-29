@@ -23,6 +23,7 @@
                 <label for="image">Images / videos</label>
                 <input id="files" onchange="read_files();" class="form-control" type="file" name="userfile[]" multiple>
             </div>
+            <?php $this->load->view('pages/inc/scheduler.php', array('scheduled' => false, 'publish_from' => false, 'publish_till' => false)); ?>
             <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
             <?= form_close() ?>
 

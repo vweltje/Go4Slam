@@ -48,6 +48,7 @@
                     </a>
                 </div>
             </div>
+            <?php $this->load->view('pages/inc/scheduler.php', array('scheduled' => false, 'publish_from' => false, 'publish_till' => false)); ?>
             <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
             <?= form_close() ?>
             

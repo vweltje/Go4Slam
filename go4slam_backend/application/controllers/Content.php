@@ -52,9 +52,10 @@ class Content extends MY_Controller {
             }
             if (!$news_item_id) {
                 $id = $this->news_items_model->insert($insert);
-                $this->timeline_model->insert(array('item_id' => $id, 'type' => 'newsletter'));
+                $this->timeline_item('insert', $id, 'newsletter');
             } else {
                 $this->news_items_model->update($insert, $news_item_id);
+                $this->timeline_item('update', $news_item_id, 'newsletter');
             }
             $this->session->set_flashdata('message', 'Newsletter successfully saved.');
             redirect('content');
@@ -103,7 +104,7 @@ class Content extends MY_Controller {
                 foreach ($images as $image) {
                     $this->gallery_items_model->insert(array('gallery_id' => $id, 'src' => $image));
                 }
-                $this->timeline_model->insert(array('item_id' => $id, 'type' => 'gallery'));
+                $this->timeline_item('insert', $id, 'gallery');
             } else {
                 if ($images) {
                     foreach ($images as $image) {
@@ -111,6 +112,7 @@ class Content extends MY_Controller {
                     }
                 }
                 $this->galleries_model->update($insert, $gallery_id);
+                $this->timeline_item('update', $gallery_id, 'gallery');
             }
             $this->session->set_flashdata('message', 'Gallery successfully saved.');
             redirect('content');
@@ -177,9 +179,10 @@ class Content extends MY_Controller {
             }
             if (!$score_id) {
                 $id = $this->scores_model->insert($insert);
-                $this->timeline_model->insert(array('item_id' => $id, 'type' => 'score'));
+                $this->timeline_item('insert', $id, 'score');
             } else {
                 $this->scores_model->update($insert, $score_id);
+                $this->timeline_item('update', $score_id, 'score');
             }
             $this->session->set_flashdata('message', 'Score successfully saved.');
             redirect('content');
