@@ -92,10 +92,12 @@ class User extends MY_Controller {
                     ->set_rules('ranking_2_name', 'ranking 2 name', 'trim')
                     ->set_rules('ranking_2_score', 'ranking 2 score', 'trim')
                     ->set_rules('ranking_3_name', 'ranking 3 name', 'trim')
-                    ->set_rules('ranking_3_score', 'ranking 3 score', 'trim');
+                    ->set_rules('ranking_3_score', 'ranking 3 score', 'trim')
+                    ->set_rules('is_coach', 'coach');
         }
         if ($user_id) {
             $fields = array(
+                'id',
                 'email',
                 'first_name',
                 'prefix',
@@ -107,6 +109,7 @@ class User extends MY_Controller {
                 $fields[] = 'ranking';
             }
             $data['user'] = $this->users_model->fields($fields)->get($user_id);
+            $data['is_coach'] = $this->ion_auth->in_group('coach', $data['user']['id']);
             if ($type !== 'cms') {
                 $data['user']['ranking'] = unserialize($data['user']['ranking']);
             }
@@ -158,10 +161,18 @@ class User extends MY_Controller {
                 if ($type === 'cms') {
                     $groups = array('1');
                 }
+                if ($this->input->post('is_coach')) {
+                    $groups[] = '3';
+                }
                 $success = $this->ion_auth_model->register($email, $this->input->post('password'), $email, $insert_data, $groups);
             } else {
                 if (!$insert_data['password']) {
                     unset($insert_data['password']);
+                }
+                if ($this->input->post('is_coach')) {
+                    $this->ion_auth_model->add_to_group(3, $user_id);
+                } else if ($data['is_coach']) {
+                    $this->ion_auth_model->remove_from_group(3, $user_id);
                 }
                 $success = $this->ion_auth_model->update($user_id, $insert_data);
             }

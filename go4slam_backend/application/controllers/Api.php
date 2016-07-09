@@ -118,7 +118,8 @@ class Api extends CI_Controller {
             $this->event_log();
             return $this->send_response(array(
                         'privatekey' => $user->privatekey,
-                        'user_id' => $user->id
+                        'user_id' => $user->id,
+                        'is_coach' => (bool) $this->ion_auth->in_group('coach', $user->id)
             ));
         }
         return $this->send_error('LOGIN_FAIL');
@@ -365,14 +366,17 @@ class Api extends CI_Controller {
      *      - image
      * Returns validation errors or true
      */
-    public function new_blogpost() {
+    public function new_blogpost($data = false) {
         $this->check_auth();
         $post_data = array(
-            'title' => $this->input->post('title'),
-            'short_description' => $this->input->post('short_description'),
-            'description' => $this->input->post('description'),
-            'user_id' => $this->user_id
+            'title' => $data ? $data['title'] : $this->input->post('title'),
+            'short_description' => $data ? $data['short_description'] : $this->input->post('short_description'),
+            'description' => $data ? $data['description'] : $this->input->post('description'),
+            'user_id' => $data ? $data['user_id'] : $this->user_id
         );
+        if (is_array($data)) {
+            $post_data['publisher_id'] = $data['publisher_id'];
+        }
         if (!$post_data['title']) {
             return $this->send_error('NO_TITLE');
         } elseif (!$post_data['short_description']) {
@@ -386,11 +390,12 @@ class Api extends CI_Controller {
             $post_data[$key] = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $value);
         }
         $this->load->helper('image_upload');
-        $img = do_image_upload(config_item('src_path_blog_images'), 10000, 250);
-        if (isset($img['error'])) {
-            return $this->send_error('ERROR');
+        if ($img = do_image_upload(config_item('src_path_blog_images'), 10000, 250, 'image')) {
+            if (isset($img['error'])) {
+                return $this->send_error('ERROR');
+            }
+            $post_data['image'] = reset($img);
         }
-        $post_data['image'] = $img['file_name'];
         $this->load->model('blog_posts_model');
         if (!$id = $this->blog_posts_model->insert($post_data)) {
             return $this->error('INSERT_FAIL');
@@ -446,12 +451,25 @@ class Api extends CI_Controller {
         $this->load->model('app_images_model');
         $data = array();
         if ($data['default_images'] = $this->app_images_model->fields(array('image', 'location'))->get_all()) {
-            if (true  || count($data['default_images']) === 0) {
+            if (true || count($data['default_images']) === 0) {
                 return $this->send_error('NO_RESULTS');
             }
             return $this->send_response($data);
         }
         return $this->send_error('ERROR');
+    }
+
+    public function new_blogpost_for_player() {
+        $this->check_auth();
+        $data = $this->input->post();
+        if (!$this->ion_auth->in_group('coach', $this->user_id)) {
+            return $this->send_error('AUTH_ERROR');
+        }
+        if (!$this->users_model->get($data['user_id'])) {
+            return $this->send_error('INVALID_USER');
+        }
+        $data['publisher_id'] = $this->user_id;
+        return $this->new_blogpost($data);
     }
 
 }

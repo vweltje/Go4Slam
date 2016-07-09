@@ -34,6 +34,13 @@ $(function () {
             });
         });
     }
+    
+    if ($('input[name="is_coach"]').length > 0) {
+        $(this).on('change', function() {
+            $('#not_coach').stop().slideToggle();
+        });
+        $('#not_coach').slideUp();
+    }
 
     jQuery.datetimepicker.setLocale('nl');
     $('.datetimepicker').datetimepicker({
