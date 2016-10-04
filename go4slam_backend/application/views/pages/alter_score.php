@@ -11,26 +11,15 @@
                 </div>
             <?php endif; ?>
             <?= form_open_multipart() ?>
-            <label>Player 1</label>
+            <label>Players</label>
             <div class="well">
                 <div class="form-group">
-                    <label for="title">Name</label>
-                    <input type="text" class="form-control" name="player_name" maxlength="255" placeholder="Name" value="<?= set_value('player_name', isset($score) ? $score['player_name'] : ''); ?>">
+                    <label for="title">Names</label> <small>for example (Mark Laarsdijk VS Irene van Groeneveld)</small>
+                    <input type="text" class="form-control" name="names" maxlength="255" placeholder="Names" value="<?= set_value('player_name', isset($score) ? $score['player_name'] : ''); ?>">
                 </div>
                 <div class="form-group">
-                    <label for="title">Score</label> <small>for example 2/4</small>
-                    <input type="text" class="form-control" name="player_score" placeholder="Score" maxlength="255" value="<?= set_value('player_score', isset($score) ? $score['player_score'] : ''); ?>">
-                </div>
-            </div>
-            <label>Player 2</label>
-            <div class="well">
-                <div class="form-group">
-                    <label for="title">Name</label>
-                    <input type="text" class="form-control" name="player_2_name" placeholder="Name" maxlength="255" value="<?= set_value('player_2_name', isset($score) ? $score['player_2_name'] : ''); ?>">
-                </div>
-                <div class="form-group">
-                    <label for="title">Score</label> <small>for example 2/4</small>
-                    <input type="text" class="form-control" name="player_2_score" placeholder="Score" maxlength="255" value="<?= set_value('player_2_score', isset($score) ? $score['player_2_score'] : ''); ?>">
+                    <label for="title">Score</label>
+                    <input type="text" class="form-control" name="scores" placeholder="Score" maxlength="255" value="<?= set_value('player_score', isset($score) ? $score['player_score'] : ''); ?>">
                 </div>
             </div>
             <div class="form-group">
@@ -51,7 +40,7 @@
             <?php $this->load->view('pages/inc/scheduler.php', array('scheduled' => false, 'publish_from' => false, 'publish_till' => false)); ?>
             <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
             <?= form_close() ?>
-            
+
             <?php $this->load->view('pages/inc/blueimp'); ?>
         </div>
     </div>

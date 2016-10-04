@@ -152,10 +152,8 @@ class Content extends MY_Controller {
 
     public function add_or_edit_score($score_id = false) {
         $data = array();
-        $this->form_validation->set_rules('player_name', 'Player name', 'trim|required')
-                ->set_rules('player_score', 'Player score', 'trim|required')
-                ->set_rules('player_2_name', 'Player 2 name', 'trim|required')
-                ->set_rules('player_2_score', 'Player 2 score', 'trim|required')
+        $this->form_validation->set_rules('names', 'Player names', 'trim|required')
+                ->set_rules('score', 'Player scores', 'trim|required')
                 ->set_rules('description', 'Description', 'trim|required')
                 ->set_rules('image', 'Image');
         if ($score_id) {
@@ -164,10 +162,8 @@ class Content extends MY_Controller {
         if ($this->form_validation->run()) {
             $this->load->helper('image_upload');
             $insert = array(
-                'player_name' => ucfirst($this->input->post('player_name')),
-                'player_score' => $this->input->post('player_score'),
-                'player_2_name' => ucfirst($this->input->post('player_2_name')),
-                'player_2_score' => $this->input->post('player_2_score'),
+                'names' => ucfirst($this->input->post('names')),
+                'scores' => $this->input->post('scores'),
                 'description' => $this->input->post('description')
             );
             if ($_FILES['userfile']['name']) {
@@ -212,7 +208,8 @@ class Content extends MY_Controller {
             'types' => config_item('event_types')
         );
         $this->form_validation->set_rules('title', 'title', 'trim|required')
-                ->set_rules('short_description', 'short_description', 'trim|required')
+                ->set_rules('short_description', 'short description', 'trim|required')
+                ->set_rules('description', 'description', 'trim|required')
                 ->set_rules('start_date', 'start date', 'required')
                 ->set_rules('type', 'type', 'required')
                 ->set_rules('end_date', 'end date', 'required')
@@ -227,6 +224,7 @@ class Content extends MY_Controller {
                 'type' => $this->input->post('type'),
                 'title' => ucfirst($this->input->post('title')),
                 'short_description' => $this->input->post('short_description'),
+                'description' => $this->input->post('description'),
                 'start_date' => date('Y-m-d H:i:s', strtotime($this->input->post('start_date'))),
                 'end_date' => date('Y-m-d H:i:s', strtotime($this->input->post('end_date')))
             );

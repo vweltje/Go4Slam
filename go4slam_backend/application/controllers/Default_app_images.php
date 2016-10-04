@@ -2,18 +2,18 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Default_app_images extends MY_Controller {
-    
+
     public function __construct() {
         parent::__construct();
-        
+
         $this->load->model('app_images_model');
     }
-    
+
     public function index() {
         $data = array('default_images' => $this->app_images_model->get_all());
         $this->load_view('pages/default_app_images', $data);
     }
-    
+
     public function add_or_edit_default_image($image_id = false) {
         $data = array();
         $this->form_validation->set_rules('location', 'location', 'required|trim')
@@ -27,11 +27,13 @@ class Default_app_images extends MY_Controller {
             }
             $insert = array('location' => $this->input->post('location'));
             $this->load->helper('image_upload');
-            $image = do_image_upload(config_item('src_path_default_images'), 10000, 500);
+            $image = do_image_upload(config_item('src_path_default_images'), 10000, 180);
             if (isset($image['error'])) {
                 return $this->load_view('pages/alter_default_image', $image);
             }
-            $insert['image'] = $image[0];
+			if (isset($image[0])) {
+	            $insert['image'] = $image[0];
+			}
             if (!$event_id) {
                 $id = $this->app_images_model->insert($insert);
             } else {
@@ -46,7 +48,7 @@ class Default_app_images extends MY_Controller {
         $data['locations'] = config_item('default_app_image_locatios');
         $this->load_view('pages/alter_default_image', $data);
     }
-    
+
     public function delete_default_image($image_id = false) {
         $data['success'] = false;
         if ($image_id) {

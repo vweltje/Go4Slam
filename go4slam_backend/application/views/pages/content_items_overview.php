@@ -90,7 +90,7 @@
                 <thead>
                     <tr>
                         <th>Players</th>
-                        <th>Score</th>
+                        <th>Scores</th>
                         <th>Manage</th>
                     </tr>
                 </thead>
@@ -101,10 +101,10 @@
                             ?>
                             <tr>
                                 <td>
-                                    <?= $score['player_name'] . ' - ' . $score['player_2_name'] ?>
+                                    <?= $score['names'] ?>
                                 </td>
                                 <td>
-                                    <?= $score['player_score'] . ' - ' . $score['player_2_score'] ?>
+                                    <?= $score['scores'] ?>
                                 </td>
                                 <td class="manage">
                                     <i title="edit" onclick="window.location.href = '<?= base_url('edit_score/' . $score['id']) ?>'" class="fa fa-pencil"></i>
@@ -119,7 +119,7 @@
             </table>
         </div>
     </div>
-    
+
     <div class="panel panel-default panel-small">
         <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-calendar" aria-hidden="true"></i> Events <i title="add" class="fa fa-plus" onclick="window.location.href = '<?= base_url('add_event') ?>'"></i></h3>

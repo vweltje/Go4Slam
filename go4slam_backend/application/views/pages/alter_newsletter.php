@@ -13,15 +13,15 @@
             <?= form_open_multipart() ?>
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" name="title" placeholder="Title" maxlength="255" value="<?= set_value('first_name', isset($newsletter) ? $newsletter['title'] : ''); ?>">
+                <input type="text" class="form-control" name="title" placeholder="Title" maxlength="255" value="<?= set_value('title', isset($newsletter) ? $newsletter['title'] : ''); ?>">
             </div>
             <div class="form-group">
                 <label for="title">Version number</label>
-                <input type="number" class="form-control" name="number" placeholder="Version number" maxlength="11" value="<?= set_value('numver', isset($newsletter) ? $newsletter['number'] : ''); ?>">
+                <input type="number" class="form-control" name="number" placeholder="Version number" maxlength="11" value="<?= set_value('number', isset($newsletter) ? $newsletter['number'] : ''); ?>">
             </div>
             <div class="form-group">
                 <label for="short_description">Short description</label>
-                <textarea class="form-control" name="short_description" placeholder="Short description" maxlength="255"><?= set_value('image', isset($newsletter) ? $newsletter['short_description'] : ''); ?></textarea>
+                <textarea class="form-control" name="short_description" placeholder="Short description" maxlength="255"><?= set_value('short_description', isset($newsletter) ? $newsletter['short_description'] : ''); ?></textarea>
             </div>
             <div class="form-group">
                 <label for="short_description">Newsletter</label>

@@ -472,4 +472,40 @@ class Api extends CI_Controller {
         return $this->new_blogpost($data);
     }
 
+	public function get_players() {
+		$this->load->model('groups_model');
+		$this->load->model('users_groups_model');
+		$this->load->model('users_model');
+		$group = $this->groups_model->get(array('name' => 'general'));
+		$users_in_group = $this->users_groups_model->get_all(array('group_id' => $group['id']));
+		foreach ($users_in_group as &$user) {
+			$user = $user['user_id'];
+		}
+		$this->db->where_in('id', $users_in_group);
+		$select = array('id', 'email', 'image', 'cover_image', 'ranking', 'first_name', 'prefix', 'last_name');
+		$users = $this->users_model->fields($select)->get_all();
+		if (count($users) < 1) {
+			return $this->send_error('NO_RESULTS');
+		}
+		return $this->send_response($users);
+	}
+
+	public function get_about_contents() {
+		if ($text = $this->db->select('text')->limit(1)->order_by('text')->get('about')->row()) {
+			return $this->send_response($text);
+		}
+		return $this->send_error('ERROR');
+	}
+
+	public function get_event_details() {
+		if ($event_id = intval($this->input->post('event_id'))) {
+			$this->load->model('events_model');
+			if ($event = $this->events_model->limit(1)->get($event_id)) {
+				return $this->send_response($event);
+			}
+			return $this->send_error('NO_EVENT');
+		}
+		return $this->send_error('NO_EVENT_ID');
+	}
+
 }

@@ -34,8 +34,9 @@ class MY_Controller extends CI_Controller {
                 $timeline['publish_from'] = $this->input->post('publish_from');
                 $timeline['publish_till'] = $this->input->post('publish_till');
             } else {
-                $timeline['publish_from'] = null;
-                $timeline['publish_till'] = null;
+                $timeline['publish_from'] = '0000-00-00 00:00:00';
+                $timeline['publish_till'] = '0000-00-00 00:00:00';
+				
             }
             return $this->timeline_model->insert($timeline);
         } elseif ($action === 'update') {
