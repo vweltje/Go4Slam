@@ -1,0 +1,528 @@
+/* Go4Slam App | Stylesheet
+ * Design and Development by
+ * Vincent Weltje en Jules Peeters
+ */
+
+/* Table of Contents
+ * 1. Font Imports
+ * 2. General Elements
+ * 3. Font styling
+ * 4. Load screen
+ * 5. Header
+ * 6. Menu
+ * 7. Timeline
+ */
+
+/* Font Imports
+ * --------------------------- */
+ /* Ubuntu | Google Fonts */
+ @import url(https://fonts.googleapis.com/css?family=Ubuntu:400,300,500,700,700italic,500italic,400italic,300italic);
+
+ /* Go4Slam Icon Font | Fontastic */
+ @import url('https://file.myfontastic.com/eNVh5bnMJ9AF2myBsttKwm/icons.css');
+
+/* General Elements
+ * --------------------------- */
+ * {
+     padding: 0px;
+     margin: 0px;
+ }
+
+ body, html {
+     height: 100%;
+     padding: 0;
+ }
+
+ #wrapper {
+     height: 100%;
+ }
+
+ #app {
+     position: relative;
+     background: #E0E0E0;
+     min-height: 100%;
+     width: 100%;
+     max-width: 100%;
+     z-index: 100;
+     overflow: auto;
+     -webkit-box-shadow: 0px 2px 20px 0px rgba(0,0,0,0.75);
+     -moz-box-shadow: 0px 2px 20px 0px rgba(0,0,0,0.75);
+     box-shadow: 0px 2px 20px 0px rgba(0,0,0,0.75);
+ }
+
+ .clearfix {
+     clear: both;
+ }
+
+/* Font Styling
+ * --------------------------- */
+ body {
+     font-family: 'Ubuntu', sans-serif;
+     font-style: 14px;
+ }
+
+ .header {
+     color: #FFF;
+ }
+ .title {
+     font-size: 49px;
+     font-weight: 300;
+ }
+
+ #loader {
+     height: 100%;
+ }
+
+ #loader p {
+     font-size: 19px;
+     font-weight: 300;
+     color: #FFFFFF;
+     margin: 8px -8px;
+     opacity: 0.75;
+     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.75);
+ }
+
+ #menu {
+     color: #FFF;
+ }
+
+ #menu li {
+     font-size: 21px;
+     font-weight: 300;
+     letter-spacing: 2px;
+     line-height: 50px;
+ }
+
+ #menuBtn {
+     font-size: 26px;
+ }
+
+ #closeBtn {
+     font-size: 26px;
+ }
+
+/* Load screen
+ * --------------------------- */
+
+ #loader {
+     position: fixed;
+     top: 0px;
+     width: 100%;
+     box-sizing: border-box;
+     background: #6563a4;
+     background: -moz-linear-gradient(top, #6563a4 0%, #2a2944 59%, #000001 100%);
+     background: -webkit-linear-gradient(top, #6563a4 0%,#2a2944 59%,#000001 100%);
+     background: linear-gradient(to bottom, #6563a4 0%,#2a2944 59%,#000001 100%);
+     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6563a4', endColorstr='#000001',GradientType=0 );
+     z-index: 100;
+ }
+
+ #loader:before {
+    content: " ";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    background: url('../img/loaderWallpaper.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    opacity: 0.3;
+ }
+
+ .spinner {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     height: 18px;
+     margin-left: -15px;
+ }
+ .loading-bar {
+     display: inline-block;
+     width: 5px;
+     height: 28px;
+     border-radius: 5px;
+     animation: loading 1s ease-in-out infinite;
+     box-shadow: 1px 1px 3px 0px rgba(50, 50, 50, 0.75);
+ }
+ .loading-bar:nth-child(1) {
+     background-color: #f26922;
+     animation-delay: 0;
+ }
+ .loading-bar:nth-child(2) {
+     background-color: #febe10;
+     animation-delay: 0.09s;
+ }
+ .loading-bar:nth-child(3) {
+     background-color: #100848;
+     animation-delay: .18s;
+ }
+ .loading-bar:nth-child(4) {
+     background-color: #036238;
+     animation-delay: .27s;
+ }
+
+ @keyframes loading {
+     0% {
+         transform: scale(1);
+     }
+     20% {
+         transform: scale(1, 2.2);
+     }
+     40% {
+         transform: scale(1);
+     }
+ }
+
+/* Header
+ * --------------------------- */
+ .colorBar {
+     position: fixed;
+     background: whitesmoke;
+     height: 5px;
+     width: 100%;
+     top: 0px;
+     z-index: 100;
+     background-image: linear-gradient(to right,
+         #f26922,
+         #f26922 25%,
+         #febe10 25%,
+         #febe10 50%,
+         #100848 50%,
+         #100848 75%,
+         #036238 75%);
+     background-size: 100% 5px;
+     background-position: 50% 100%;
+     background-repeat: no-repeat;
+
+     -webkit-box-shadow: 0px 2px 20px 0px rgba(0,0,0,0.75);
+     -moz-box-shadow: 0px 2px 20px 0px rgba(0,0,0,0.75);
+     box-shadow: 0px 2px 20px 0px rgba(0,0,0,0.75);
+}
+
+ .header {
+     width: 100%;
+     height: 225px;
+     background: black;
+     margin-bottom: 20px;
+     background-size: cover !important;
+     -webkit-clip-path: polygon(0 0, 100% 0, 100% 81%, 0% 100%);
+     clip-path: polygon(0 0, 100% 0, 100% 81%, 0% 100%);
+     text-shadow: 3px 2px 6px rgba(0, 0, 0, 1);
+     background: url('../img/tennis-player.jpg');
+ }
+
+ .header:after {
+     background-color: black;
+     opacity: 0.3;
+ }
+
+ .title {
+     text-align: center;
+     display: flex;
+     justify-content: center;
+     flex-direction: column;
+     height: 225px;
+ }
+
+ #menuBtn {
+     position: fixed;
+     margin: 25px 0px 0px 25px;
+ }
+
+ #closeBtn {
+     position: relative;
+     z-index: 2000;
+ }
+
+/* Menu
+ * --------------------------- */
+ #menu {
+     position: absolute;
+     height: 100%;
+     width: 100%;
+     padding: 35px 0px 0px 35px;
+     box-sizing: border-box;
+     background: #6563a4;
+     background: -moz-linear-gradient(top, #6563a4 0%, #2a2944 59%, #000001 100%);
+     background: -webkit-linear-gradient(top, #6563a4 0%,#2a2944 59%,#000001 100%);
+     background: linear-gradient(to bottom, #6563a4 0%,#2a2944 59%,#000001 100%);
+     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6563a4', endColorstr='#000001',GradientType=0 );
+     z-index: 50;
+ }
+
+ #menu:before {
+    content: " ";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    background: url('../img/menuWallpaper.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    opacity: 0.3;
+ }
+
+ #menu ul {
+     position: relative;
+     list-style-type: none;
+     top: 90px;
+     left: 20px;
+     height: auto;
+ }
+
+ #menu li {
+     display: block;
+     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.63);
+     height: auto;
+ }
+
+ /* Timeline
+  * --------------------------- */
+  .inner {
+      width: 90%;
+      margin: 0 auto;
+      margin-bottom: 25px;
+      box-sizing: border-box;
+      background: white;
+      padding: 12px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      -webkit-box-shadow: 0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+      -moz-box-shadow:    0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+      box-shadow:         0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+  }
+
+  .eventItem {
+      width: 100%;
+      margin: 0 auto;
+      margin-bottom: 25px;
+      box-sizing: border-box;
+      background: white;
+      padding: 6px 10px;
+      -webkit-box-shadow: 0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+      -moz-box-shadow:    0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+      box-shadow:         0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+  }
+
+  .day {
+      font-size: 46px;
+      font-weight: 300;
+  }
+
+  .month {
+      font-size: 11px;
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+  }
+
+  .inner img {
+      position: relative;
+      margin: 5px;
+      width: 80px;
+      height: 80px;
+      margin-top: 20px;
+      display: inline;
+      text-align: center;
+  }
+
+  .date {
+      width: 90%;
+      margin: 0 auto;
+      margin-top: -20px;
+      font-size: 12px;
+      text-align: right;
+      color: #6E6E6E;
+  }
+
+
+
+  .timelineItem {
+      width: 90%;
+      margin: 0 auto;
+      margin-bottom: 25px;
+      box-sizing: border-box;
+      background: white;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      -webkit-box-shadow: 0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+      -moz-box-shadow:    0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+      box-shadow:         0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+  }
+
+  .conImgLeft {
+      flex: 1;
+      background-size: cover;
+      -webkit-border-top-left-radius: 5px;
+      -webkit-border-bottom-left-radius: 5px;
+      -moz-border-radius-topleft: 5px;
+      -moz-border-radius-bottomleft: 5px;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+  }
+
+  .left {
+      flex: 1;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+  }
+
+  .nieuwsbriefnr {
+      font-size: 46px;
+      font-weight: 300;
+  }
+
+  .nieuwsbriefondertitel {
+      font-size: 11px;
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+  }
+
+  .timelineItem .colorbar {
+      height: 3px;
+      width: 100%;
+      background-image: linear-gradient(to right,
+          #f26922,
+          #f26922 25%,
+          #febe10 25%,
+          #febe10 50%,
+          #100848 50%,
+          #100848 75%,
+          #036238 75%);
+      background-size: 100% 3px;
+      background-position: 50% 100%;
+      background-repeat: no-repeat;
+      -webkit-border-top-left-radius: 5px;
+      -webkit-border-top-right-radius: 5px;
+      -moz-border-radius-topleft: 5px;
+      -moz-border-radius-topright: 5px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+  }
+
+  .score,
+  .blog,
+  .nieuwsbrief,
+  .gallery,
+  .eventItem {
+      display: flex;
+  }
+
+  .itemTitle {
+      font-size: 19px;
+      margin-bottom: 8px;
+  }
+
+  .itemDescription {
+      font-size: 14px;
+      margin-bottom: 8px;
+  }
+
+  .right {
+      width: 70%;
+      box-sizing: border-box;
+      padding: 10px;
+  }
+
+  .playerOne, .playerTwo {
+      width: 50%;
+      float: left;
+      text-align: center;
+      margin: 8px 0px;
+  }
+
+  .scores {
+      width: 80%;
+      margin: 0 auto;
+  }
+
+  .scores .points {
+      font-size: 38px;
+      font-weight: 300;
+  }
+
+  .scores .name {
+      font-size: 21px;
+      font-weight: 300;
+      margin-bottom: 15px;
+  }
+
+  .score .right .points {
+      font-size: 28px;
+      font-weight: 300;
+  }
+
+  .score .right .name {
+      font-size: 18px;
+      font-weight: 300;
+  }
+
+  .more {
+      position: relative;
+      bottom: -7px;
+      text-align: center;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+  }
+
+  .more a {
+      color: black;
+      text-decoration: none;
+  }
+
+  .spelers {
+      width: 90%;
+      margin: 0 auto;
+  }
+
+  .player {
+      width: 50%;
+      float: left;
+      box-sizing: border-box;
+  }
+
+  .player .inner {
+      width: 90%;
+      height: 150px;
+      margin: 0 auto;
+      margin-bottom: 25px;
+      box-sizing: border-box;
+      background: white;
+      padding: 12px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      background-size: cover !important;
+      -webkit-box-shadow: 0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+      -moz-box-shadow:    0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+      box-shadow:         0px 2px 4px 0px rgba(96, 96, 96, 0.4);
+  }
+
+  .sponsorLogo {
+      width: 46%;
+      margin: 2%;
+      height: 150px;
+      background-size: cover !important;
+      float: left;
+      box-sizing: border-box;
+  }
+
+  .sponsoren {
+      width: 90%;
+      margin: 0 auto;
+      box-sizing: border-box;
+  }

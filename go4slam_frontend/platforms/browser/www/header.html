@@ -1,0 +1,19 @@
+<div class="colorBar"></div>
+
+<div id="menu">
+    <ul id="nav">
+        <!-- Gets loaded in menu.js -->
+    </ul>
+</div>
+
+<div id="app">
+    <!-- Gets loaded in loadingClass.js -->
+</div>
+
+<script>
+    if (!loaderClass.currentPage) {
+        console.log('currentPage');
+        loaderClass.loadPageInHeader('default');
+    }
+    menuClass.loadMenuItems('#nav');
+</script>

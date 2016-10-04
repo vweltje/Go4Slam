@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="nl.go4slam.app" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>Go4Slam</name>
+    <description>
+        Omschrijving
+    </description>
+    <author email="info@go4slam.nl" href="http://go4slam.nl">
+        Go4Slam
+    </author>
+    <icon src="icon.png" />
+</widget>

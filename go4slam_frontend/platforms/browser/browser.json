@@ -1,0 +1,43 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "org.apache.cordova.network-information": {
+            "PACKAGE_NAME": "nl.go4slam.app"
+        }
+    },
+    "dependent_plugins": {},
+    "modules": [
+        {
+            "file": "plugins/org.apache.cordova.network-information/www/network.js",
+            "id": "org.apache.cordova.network-information.network",
+            "pluginId": "org.apache.cordova.network-information",
+            "clobbers": [
+                "navigator.connection",
+                "navigator.network.connection"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.network-information/www/Connection.js",
+            "id": "org.apache.cordova.network-information.Connection",
+            "pluginId": "org.apache.cordova.network-information",
+            "clobbers": [
+                "Connection"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.network-information/src/browser/NetworkProxy.js",
+            "id": "org.apache.cordova.network-information.NetworkProxy",
+            "pluginId": "org.apache.cordova.network-information",
+            "runs": true
+        }
+    ],
+    "plugin_metadata": {
+        "org.apache.cordova.network-information": "0.2.12"
+    }
+}

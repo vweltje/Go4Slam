@@ -25,7 +25,7 @@ class Api extends CI_Controller {
     }
 
     /**
-     * Check if request is valid. 
+     * Check if request is valid.
      */
     private function check_api_key() {
         return true;
@@ -214,7 +214,7 @@ class Api extends CI_Controller {
     /**
      * Return all user's details
      * POST:
-     * - id INT: the id of the requested user. 
+     * - id INT: the id of the requested user.
      * Returns associative array:
      * - first_name STRING
      * - prefix STRING
@@ -252,7 +252,7 @@ class Api extends CI_Controller {
 
     /**
      * Edit user information
-     * POST: 
+     * POST:
      * - first_name STRING
      * - perfix STRING
      * - last_name STRING

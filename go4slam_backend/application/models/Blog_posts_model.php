@@ -18,7 +18,7 @@ class Blog_posts_model extends MY_Model {
     }
 
     protected function get_publisher($row) {
-        if (is_array($row[0]) || is_object($row[0])) {
+        if (isset($row[0]) && (is_array($row[0]) || is_object($row[0]))) {
             foreach ($row as &$item) {
                 $item = $this->get_publisher($item);
             }
