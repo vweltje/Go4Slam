@@ -15,11 +15,11 @@
             <div class="well">
                 <div class="form-group">
                     <label for="title">Names</label> <small>for example (Mark Laarsdijk VS Irene van Groeneveld)</small>
-                    <input type="text" class="form-control" name="names" maxlength="255" placeholder="Names" value="<?= set_value('player_name', isset($score) ? $score['player_name'] : ''); ?>">
+                    <input type="text" class="form-control" name="names" maxlength="255" placeholder="Names" value="<?= set_value('player_name', isset($score) ? $score['names'] : ''); ?>">
                 </div>
                 <div class="form-group">
                     <label for="title">Score</label>
-                    <input type="text" class="form-control" name="scores" placeholder="Score" maxlength="255" value="<?= set_value('player_score', isset($score) ? $score['player_score'] : ''); ?>">
+                    <input type="text" class="form-control" name="scores" placeholder="Score" maxlength="255" value="<?= set_value('player_score', isset($score) ? $score['scores'] : ''); ?>">
                 </div>
             </div>
             <div class="form-group">

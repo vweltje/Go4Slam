@@ -153,7 +153,7 @@ class Content extends MY_Controller {
     public function add_or_edit_score($score_id = false) {
         $data = array();
         $this->form_validation->set_rules('names', 'Player names', 'trim|required')
-                ->set_rules('score', 'Player scores', 'trim|required')
+                ->set_rules('scores', 'Player scores', 'trim|required')
                 ->set_rules('description', 'Description', 'trim|required')
                 ->set_rules('image', 'Image');
         if ($score_id) {
