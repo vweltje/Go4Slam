@@ -79,3 +79,4 @@ $route['delete_score/(:num)'] = 'content/delete_score/$1';
 $route['add_default_image'] = 'default_app_images/add_or_edit_default_image';
 $route['edit_default_image/(:num)'] = 'default_app_images/add_or_edit_default_image/$1';
 $route['delete_default_image/(:num)'] = 'default_app_images/delete_default_image/$1';
+$route['delete_blogpost/(:num)'] = 'content/delete_blogpost/$1';

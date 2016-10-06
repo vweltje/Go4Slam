@@ -13,7 +13,7 @@ class Timeline_model extends MY_Model {
 
         parent::__construct();
     }
-    
+
     public function get_timeline($load_count = 0) {
         $offset = $load_count * config_item('timeline_load_limit');
         $timeline = $this->order_by('created_at', 'desc')->limit(config_item('timeline_load_limit'), $offset)->get_all();
@@ -29,7 +29,7 @@ class Timeline_model extends MY_Model {
             if ($item['publish_from'] !== '0000-00-00 00:00:00' && strtotime($item['publish_from']) > time()) {
                 unset($timeline[$key]);
                 continue;
-            } 
+            }
             if ($item['publish_till'] !== '0000-00-00 00:00:00' && strtotime($item['publish_till']) < time()) {
                 unset($timeline[$key]);
                 continue;

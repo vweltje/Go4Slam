@@ -18,4 +18,4 @@ $config['forgotten_password_expire_time'] = '86400'; //seconds
 $config['timeline_load_limit'] = '10';
 
 $config['logging_types'] = array('login', 'get_user_details', 'get_timeline', 'new_blogpost', 'get_calendar');
-$config['default_app_image_locatios'] = array('timeline', 'agenda', 'about', 'players', 'sponsoren');
+$config['default_app_image_locatios'] = array('timeline', 'agenda', 'about', 'players', 'sponsors');

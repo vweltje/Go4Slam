@@ -158,4 +158,42 @@
             </table>
         </div>
     </div>
+
+	<div class="panel panel-default panel-small">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-calendar" aria-hidden="true"></i> Timeline items</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Title</th>
+                        <th>Manage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($blog_posts) :
+                        foreach ($blog_posts as $post) :
+                            ?>
+                            <tr>
+                                <td>
+                                    <?= $post['publisher']['first_name'] . ' ' . ($post['publisher']['prefix'] !== '' ? $post['publisher']['prefix'] . ' ' : '') . $post['publisher']['last_name'] ?>
+                                </td>
+                                <td>
+                                    <?= $post['title'] ?>
+                                </td>
+                                <td class="manage">
+                                    <i title="remove" data-link="<?= base_url('delete_blogpost/' . $post['id']) ?>" class="fa fa-trash"></i>
+                                </td>
+                            </tr>
+                            <?php
+                        endforeach;
+                    endif;
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

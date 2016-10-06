@@ -32,13 +32,15 @@ class Blog_posts_model extends MY_Model {
             );
             if (is_array($row)) {
                 $row['publisher'] = false;
-                if ($row['publisher_id']) {
-                    $row['publisher'] = $this->users_model->fields($select)->get($row['publisher_id']);
+                if ($row['user_id'] || $row['publisher_id']) {
+					$id = $row['publisher_id'] ? $row['publisher_id'] : $row['user_id'];
+                    $row['publisher'] = $this->users_model->fields($select)->get($row['user_id']);
                 }
             } elseif (is_object($row)) {
                 $row->publisher = false;
-                if ($row->publisher_id) {
-                    $row->publisher = $this->users_model->fields($select)->get($row->publisher_id);
+                if ($row->user_id || $row->publisher_id) {
+					$id = $row->publisher_id ? $row->publisher_id : $row->user_id;
+                    $row->publisher = $this->users_model->fields($select)->get($row->user_id);
                 }
             }
         }
