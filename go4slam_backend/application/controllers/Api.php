@@ -451,7 +451,7 @@ class Api extends CI_Controller {
         $this->load->model('app_images_model');
         $data = array();
         if ($data['default_images'] = $this->app_images_model->fields(array('image', 'location'))->get_all()) {
-            if (true || count($data['default_images']) === 0) {
+            if (count($data['default_images']) === 0) {
                 return $this->send_error('NO_RESULTS');
             }
             return $this->send_response($data);
